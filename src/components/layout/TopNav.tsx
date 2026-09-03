@@ -76,13 +76,6 @@ export const TopNav: React.FC = () => {
       badge: unreadNotificationsCount > 0 ? String(unreadNotificationsCount) : undefined,
       badgeColor: 'bg-rose-500 text-white font-bold'
     },
-    {
-      id: 'components',
-      label: 'UI Components',
-      icon: Sparkles,
-      badge: 'NEW',
-      badgeColor: 'bg-amber-100 text-amber-800 border-amber-300'
-    },
   ];
 
   return (

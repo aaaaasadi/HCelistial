@@ -585,9 +585,9 @@ export const DashboardView: React.FC = () => {
           <EclipseButton
             variant="primary"
             size="sm"
-            text="UI Components"
+            text="Recovery Center"
             rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-            onClick={() => setCurrentTab('components')}
+            onClick={() => setCurrentTab('recovery')}
           />
         </div>
       </div>

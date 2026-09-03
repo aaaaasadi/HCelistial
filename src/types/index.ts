@@ -286,8 +286,8 @@ export type NavigationTab =
   | 'recovery'
   | 'ai'
   | 'preferences'
-  | 'notifications'
-  | 'components';
+  | 'notifications';
+
 
 
 // ==========================================
