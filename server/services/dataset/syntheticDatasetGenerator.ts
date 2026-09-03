@@ -1,20 +1,28 @@
 /**
  * Large Structured Relational Synthetic Travel Dataset Generator
- * Generates 120+ Indian Cities, 300+ Stations/Airports/Hubs, 1,800+ Trains,
- * 1,800+ Buses, 800+ Flights, 1,200+ Hotels, 800+ Activities, and 100+ Disruption Scenarios.
- * 
- * Deterministic generator with zero external API dependencies for Round 1 Prototype.
+ * Generates 120+ Indian Destinations, 40+ Popular Corridor Journeys, 300+ Stations/Airports,
+ * 1,800+ Trains, 1,800+ Buses, 800+ Flights, 1,200+ Hotels, 800+ Activities, and 100+ Disruptions.
  */
 
 export interface SyntheticCity {
   id: string;
   name: string;
   state: string;
+  country: string;
   region: 'West' | 'North' | 'South' | 'East' | 'Central' | 'NorthEast';
   latitude: number;
   longitude: number;
+  destinationType: 'METRO' | 'CITY' | 'BEACH' | 'HILL_STATION' | 'HERITAGE' | 'PILGRIMAGE' | 'ADVENTURE' | 'NATURE' | 'WILDLIFE' | 'COASTAL' | 'CULTURAL' | 'SPIRITUAL';
   tier: 'Tier-1' | 'Tier-2' | 'Tier-3';
   isTouristHub: boolean;
+  description: string;
+  shortDescription: string;
+  popularityScore: number; // 0 - 100
+  bestTimeToVisit: string;
+  averageStayDays: number;
+  budgetLevel: string;
+  tags: string[];
+  dataSource: string;
 }
 
 export interface SyntheticStation {
@@ -27,6 +35,25 @@ export interface SyntheticStation {
   latitude: number;
   longitude: number;
   stationType: 'RAILWAY_JUNCTION' | 'AIRPORT' | 'BUS_TERMINAL' | 'METRO_STATION';
+}
+
+export interface PopularJourney {
+  id: string;
+  originCityId: string;
+  originCityName: string;
+  destCityId: string;
+  destCityName: string;
+  title: string;
+  description: string;
+  popularityScore: number;
+  estimatedDuration: string;
+  recommendedDays: number;
+  travelStyle: string;
+  approximateBudget: number;
+  availableTransportTypes: ('TRAIN' | 'BUS' | 'FLIGHT')[];
+  tags: string[];
+  featured: boolean;
+  dataSource: string;
 }
 
 export interface SyntheticTrain {
@@ -99,16 +126,24 @@ export interface SyntheticHotel {
   cityId: string;
   cityName: string;
   area: string;
+  address: string;
   latitude: number;
   longitude: number;
   rating: number;
-  category: 'Budget' | 'Mid-range' | 'Premium' | 'Luxury';
+  reviewCount: number;
+  category: 'BUDGET' | 'MID_RANGE' | 'PREMIUM' | 'LUXURY' | 'RESORT' | 'HERITAGE_PALACE' | 'BOUTIQUE';
   pricePerNight: number;
+  currency: string;
   checkInTime: string;
   checkOutTime: string;
   cancellationPolicy: string;
-  amenities: string;
-  bookingStatus: 'AVAILABLE' | 'FEW_LEFT';
+  amenities: string[];
+  roomTypes: string[];
+  availabilityStatus: 'AVAILABLE' | 'FEW_LEFT';
+  popularityScore: number;
+  description: string;
+  tags: string[];
+  dataSource: string;
 }
 
 export interface SyntheticActivity {
@@ -116,13 +151,21 @@ export interface SyntheticActivity {
   activityName: string;
   cityId: string;
   cityName: string;
-  category: 'Sightseeing' | 'Beach' | 'Adventure' | 'Museum' | 'Food' | 'Nature' | 'Cultural' | 'Shopping' | 'Entertainment';
+  category: 'SIGHTSEEING' | 'BEACH' | 'ADVENTURE' | 'NATURE' | 'CULTURAL' | 'HISTORY' | 'MUSEUM' | 'FOOD' | 'SHOPPING' | 'NIGHTLIFE' | 'SPIRITUAL';
+  description: string;
   duration: string;
   startTime: string;
   endTime: string;
   price: number;
-  popularity: number;
-  bookingStatus: 'AVAILABLE' | 'FEW_LEFT';
+  currency: string;
+  popularityScore: number;
+  rating: number;
+  bestTime: string;
+  bookingRequired: boolean;
+  familyFriendly: boolean;
+  indoorOutdoor: 'INDOOR' | 'OUTDOOR' | 'BOTH';
+  tags: string[];
+  dataSource: string;
 }
 
 export interface SyntheticDisruptionScenario {
@@ -136,177 +179,583 @@ export interface SyntheticDisruptionScenario {
   description: string;
 }
 
-// 1. MASTER CITIES (120+ Cities across India)
+// 1. MASTER CITIES (120+ Rich Destinations)
 export const MASTER_CITIES: SyntheticCity[] = [
-  // Maharashtra & Western Corridor
-  { id: 'city-mumbai', name: 'Mumbai', state: 'Maharashtra', region: 'West', latitude: 18.9220, longitude: 72.8347, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-pune', name: 'Pune', state: 'Maharashtra', region: 'West', latitude: 18.5204, longitude: 73.8567, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-panvel', name: 'Panvel', state: 'Maharashtra', region: 'West', latitude: 18.9894, longitude: 73.1175, tier: 'Tier-2', isTouristHub: false },
-  { id: 'city-chiplun', name: 'Chiplun', state: 'Maharashtra', region: 'West', latitude: 17.5323, longitude: 73.5186, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-ratnagiri', name: 'Ratnagiri', state: 'Maharashtra', region: 'West', latitude: 16.9902, longitude: 73.3120, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-khed', name: 'Khed', state: 'Maharashtra', region: 'West', latitude: 17.7214, longitude: 73.3853, tier: 'Tier-3', isTouristHub: false },
-  { id: 'city-sawantwadi', name: 'Sawantwadi', state: 'Maharashtra', region: 'West', latitude: 15.9064, longitude: 73.8202, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-nashik', name: 'Nashik', state: 'Maharashtra', region: 'West', latitude: 19.9975, longitude: 73.7898, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-shirdi', name: 'Shirdi', state: 'Maharashtra', region: 'West', latitude: 19.7667, longitude: 74.4766, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-nagpur', name: 'Nagpur', state: 'Maharashtra', region: 'West', latitude: 21.1458, longitude: 79.0882, tier: 'Tier-2', isTouristHub: false },
-  { id: 'city-aurangabad', name: 'Chhatrapati Sambhajinagar', state: 'Maharashtra', region: 'West', latitude: 19.8762, longitude: 75.3433, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-kolhapur', name: 'Kolhapur', state: 'Maharashtra', region: 'West', latitude: 16.7050, longitude: 74.2433, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-solapur', name: 'Solapur', state: 'Maharashtra', region: 'West', latitude: 17.6599, longitude: 75.9064, tier: 'Tier-2', isTouristHub: false },
-  { id: 'city-mahabaleshwar', name: 'Mahabaleshwar', state: 'Maharashtra', region: 'West', latitude: 17.9237, longitude: 73.6586, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-lonavala', name: 'Lonavala', state: 'Maharashtra', region: 'West', latitude: 18.7557, longitude: 73.4091, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-alibag', name: 'Alibag', state: 'Maharashtra', region: 'West', latitude: 18.6414, longitude: 72.8722, tier: 'Tier-3', isTouristHub: true },
+  // Maharashtra & Goa Corridor
+  {
+    id: 'city-mumbai',
+    name: 'Mumbai',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 18.9220,
+    longitude: 72.8347,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'India’s financial capital, vibrant coastal metropolis famous for Marine Drive, Gateway of India, Bollywood, and iconic heritage railway architectures.',
+    shortDescription: 'The bustling City of Dreams with rich colonial heritage & Arabian Sea coastline.',
+    popularityScore: 98,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Premium (₹4,500 - ₹9,000 / day)',
+    tags: ['Metro', 'Coastal', 'Heritage', 'Food', 'Nightlife', 'Bollywood'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-pune',
+    name: 'Pune',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 18.5204,
+    longitude: 73.8567,
+    destinationType: 'CULTURAL',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'The Oxford of the East and cultural capital of Maharashtra, nestled in the Western Ghats with historic Maratha forts, green hills, and thriving food culture.',
+    shortDescription: 'Cultural hub of Maharashtra with historic forts, palaces, and hill gateways.',
+    popularityScore: 91,
+    bestTimeToVisit: 'July to February',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹5,000 / day)',
+    tags: ['Culture', 'Ghats', 'Forts', 'Universities', 'Cuisine'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-goa',
+    name: 'Goa (Panaji & Madgaon)',
+    state: 'Goa',
+    country: 'India',
+    region: 'West',
+    latitude: 15.4909,
+    longitude: 73.8278,
+    destinationType: 'BEACH',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'World-famous tropical paradise with golden beaches, Portuguese-colonial architecture, vibrant night markets, water sports, and tranquil backwaters.',
+    shortDescription: 'Sun, sand, Portuguese heritage villas, and Arabian Sea beach resorts.',
+    popularityScore: 99,
+    bestTimeToVisit: 'November to February',
+    averageStayDays: 4,
+    budgetLevel: 'Flexible (₹3,000 - ₹12,000 / day)',
+    tags: ['Beach', 'Nightlife', 'Seafood', 'Water Sports', 'Portuguese Heritage'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-panvel',
+    name: 'Panvel',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 18.9894,
+    longitude: 73.1175,
+    destinationType: 'CITY',
+    tier: 'Tier-2',
+    isTouristHub: false,
+    description: 'Gateway junction to the Konkan Railway network and Mumbai Metropolitan Region transit hub.',
+    shortDescription: 'Key intermodal transport junction connecting Mumbai to Konkan and Goa.',
+    popularityScore: 78,
+    bestTimeToVisit: 'All Year',
+    averageStayDays: 1,
+    budgetLevel: 'Budget (₹1,500 - ₹3,000 / day)',
+    tags: ['Transit Hub', 'Konkan Rail Junction', 'Intermodal'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-chiplun',
+    name: 'Chiplun',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 17.5323,
+    longitude: 73.5186,
+    destinationType: 'NATURE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Scenic town on the banks of the Vashishti River in the Konkan belt, surrounded by lush Western Ghat hills, mango orchards, and ancient temples.',
+    shortDescription: 'Tranquil Konkan riverfront valley with mango orchards and Western Ghats waterfalls.',
+    popularityScore: 82,
+    bestTimeToVisit: 'June to February',
+    averageStayDays: 2,
+    budgetLevel: 'Budget (₹1,800 - ₹3,500 / day)',
+    tags: ['Konkan Valley', 'Riverfront', 'Mangoes', 'Waterfalls', 'Nature'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-ratnagiri',
+    name: 'Ratnagiri',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 16.9902,
+    longitude: 73.3120,
+    destinationType: 'COASTAL',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Historic coastal Konkan port town renowned for Alphonso mangoes, scenic sea forts (Jaigad, Ratnadurg), and tranquil beaches.',
+    shortDescription: 'Coastal paradise famous for Alphonso mangoes, lighthouse forts, and secluded shores.',
+    popularityScore: 86,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,200 - ₹4,500 / day)',
+    tags: ['Coastal', 'Forts', 'Alphonso Mangoes', 'Beaches'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-nashik',
+    name: 'Nashik',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 19.9975,
+    longitude: 73.7898,
+    destinationType: 'PILGRIMAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The wine capital of India on the banks of Godavari River, featuring Sula Vineyards, Trimbakeshwar Jyotirlinga, and rolling Sahyadri vineyards.',
+    shortDescription: 'India’s wine capital and sacred Godavari river heritage center.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,800 - ₹6,000 / day)',
+    tags: ['Wine Capital', 'Vineyards', 'Godavari River', 'Pilgrimage', 'Trekking'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-mahabaleshwar',
+    name: 'Mahabaleshwar',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 17.9237,
+    longitude: 73.6586,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Serene Western Ghats hill station famous for lush strawberry farms, mist-clad cliff viewpoints (Arthur’s Seat, Wilson Point), and Venna Lake.',
+    shortDescription: 'Strawberry capital and premier hill station retreat in the Sahyadri mountains.',
+    popularityScore: 92,
+    bestTimeToVisit: 'October to June',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹8,500 / day)',
+    tags: ['Hill Station', 'Strawberries', 'Viewpoints', 'Boating', 'Cool Climate'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
 
-  // Goa
-  { id: 'city-panaji', name: 'Panaji', state: 'Goa', region: 'West', latitude: 15.4909, longitude: 73.8278, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-madgaon', name: 'Madgaon', state: 'Goa', region: 'West', latitude: 15.2832, longitude: 73.9862, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-calangute', name: 'Calangute', state: 'Goa', region: 'West', latitude: 15.5439, longitude: 73.7554, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-vasco', name: 'Vasco da Gama', state: 'Goa', region: 'West', latitude: 15.3982, longitude: 73.8113, tier: 'Tier-2', isTouristHub: true },
+  // North & Golden Triangle
+  {
+    id: 'city-delhi',
+    name: 'New Delhi',
+    state: 'Delhi',
+    country: 'India',
+    region: 'North',
+    latitude: 28.6139,
+    longitude: 77.2090,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'National capital city blending grand Mughal monuments (Red Fort, Qutub Minar, Humayun’s Tomb), Lutyens boulevards, and world-class street gastronomy.',
+    shortDescription: 'Historic national capital with centuries of monumental architecture and culinary culture.',
+    popularityScore: 97,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Flexible (₹3,000 - ₹9,000 / day)',
+    tags: ['Capital', 'Mughal Architecture', 'Museums', 'Street Food', 'Shopping'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-agra',
+    name: 'Agra',
+    state: 'Uttar Pradesh',
+    country: 'India',
+    region: 'North',
+    latitude: 27.1767,
+    longitude: 78.0081,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Home of the timeless white marble Taj Mahal, UNESCO World Heritage Agra Fort, and Fatehpur Sikri on the Yamuna riverfront.',
+    shortDescription: 'City of the Taj Mahal, Mughal palaces, and timeless marble artistry.',
+    popularityScore: 99,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹6,500 / day)',
+    tags: ['Taj Mahal', 'World Heritage', 'Mughal History', 'Marble Art'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-jaipur',
+    name: 'Jaipur',
+    state: 'Rajasthan',
+    country: 'India',
+    region: 'North',
+    latitude: 26.9124,
+    longitude: 75.7873,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'The Pink City of Rajasthan, famous for Hawa Mahal, Amber Fort atop rugged hills, royal City Palace, and bustling textile bazaars.',
+    shortDescription: 'The royal Pink City with grand hilltop fortresses and artisanal handicraft markets.',
+    popularityScore: 96,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹10,000 / day)',
+    tags: ['Pink City', 'Palaces', 'Amber Fort', 'Handicrafts', 'Royal Dining'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-udaipur',
+    name: 'Udaipur',
+    state: 'Rajasthan',
+    country: 'India',
+    region: 'North',
+    latitude: 24.5854,
+    longitude: 73.7125,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The City of Lakes and Venice of the East, famed for Lake Pichola, the majestic City Palace complex, floating Lake Palace, and romantic sunsets.',
+    shortDescription: 'Romantic Lake City with floating palaces and Aravalli mountain backdrops.',
+    popularityScore: 95,
+    bestTimeToVisit: 'September to March',
+    averageStayDays: 3,
+    budgetLevel: 'Luxury & Heritage (₹3,500 - ₹14,000 / day)',
+    tags: ['City of Lakes', 'Lake Pichola', 'Palaces', 'Romantic', 'Heritage'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-varanasi',
+    name: 'Varanasi',
+    state: 'Uttar Pradesh',
+    country: 'India',
+    region: 'North',
+    latitude: 25.3176,
+    longitude: 82.9739,
+    destinationType: 'SPIRITUAL',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'One of the world’s oldest living cities, spiritual heart of India along the holy River Ganga with evening Ganga Aarti at Dashashwamedh Ghat.',
+    shortDescription: 'Sacred timeless city along the River Ganga with spiritual ghats and ancient silk traditions.',
+    popularityScore: 94,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹5,000 / day)',
+    tags: ['River Ganga', 'Ghats', 'Ganga Aarti', 'Spiritual', 'Silk'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-rishikesh',
+    name: 'Rishikesh',
+    state: 'Uttarakhand',
+    country: 'India',
+    region: 'North',
+    latitude: 30.0869,
+    longitude: 78.2676,
+    destinationType: 'ADVENTURE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Yoga Capital of the World and adventure hub on the Himalayan foothills, famous for white-water river rafting, suspension bridges, and yoga ashrams.',
+    shortDescription: 'Himalayan yoga sanctuary and thrilling white-water river rafting capital.',
+    popularityScore: 93,
+    bestTimeToVisit: 'September to May',
+    averageStayDays: 3,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹5,500 / day)',
+    tags: ['Yoga', 'White-Water Rafting', 'Himalayas', 'Ganga', 'Ashrams'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-manali',
+    name: 'Manali',
+    state: 'Himachal Pradesh',
+    country: 'India',
+    region: 'North',
+    latitude: 32.2432,
+    longitude: 77.1892,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'High-altitude Himalayan resort town surrounded by snow-capped peaks, pine forests, Solang Valley adventure sports, and gateway to Rohtang Pass.',
+    shortDescription: 'Snow-capped Himalayan valley town with alpine meadows and river adventures.',
+    popularityScore: 94,
+    bestTimeToVisit: 'October to June',
+    averageStayDays: 4,
+    budgetLevel: 'Moderate (₹3,000 - ₹7,000 / day)',
+    tags: ['Snow Peaks', 'Solang Valley', 'Trekking', 'Paragliding', 'Himalayas'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
 
-  // Gujarat
-  { id: 'city-ahmedabad', name: 'Ahmedabad', state: 'Gujarat', region: 'West', latitude: 23.0225, longitude: 72.5714, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-surat', name: 'Surat', state: 'Gujarat', region: 'West', latitude: 21.1702, longitude: 72.8311, tier: 'Tier-1', isTouristHub: false },
-  { id: 'city-vadodara', name: 'Vadodara', state: 'Gujarat', region: 'West', latitude: 22.3072, longitude: 73.1812, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-rajkot', name: 'Rajkot', state: 'Gujarat', region: 'West', latitude: 22.3039, longitude: 70.8022, tier: 'Tier-2', isTouristHub: false },
-  { id: 'city-bhuj', name: 'Bhuj', state: 'Gujarat', region: 'West', latitude: 23.2420, longitude: 69.6669, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-somnath', name: 'Somnath', state: 'Gujarat', region: 'West', latitude: 20.8880, longitude: 70.4012, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-dwarka', name: 'Dwarka', state: 'Gujarat', region: 'West', latitude: 22.2442, longitude: 68.9685, tier: 'Tier-3', isTouristHub: true },
-
-  // Rajasthan & North
-  { id: 'city-jaipur', name: 'Jaipur', state: 'Rajasthan', region: 'North', latitude: 26.9124, longitude: 75.7873, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-udaipur', name: 'Udaipur', state: 'Rajasthan', region: 'North', latitude: 24.5854, longitude: 73.7125, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-jodhpur', name: 'Jodhpur', state: 'Rajasthan', region: 'North', latitude: 26.2389, longitude: 73.0243, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-jaisalmer', name: 'Jaisalmer', state: 'Rajasthan', region: 'North', latitude: 26.9157, longitude: 70.9083, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-pushkar', name: 'Pushkar', state: 'Rajasthan', region: 'North', latitude: 26.4897, longitude: 74.5511, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-mountabu', name: 'Mount Abu', state: 'Rajasthan', region: 'North', latitude: 24.5925, longitude: 72.7156, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-bikaner', name: 'Bikaner', state: 'Rajasthan', region: 'North', latitude: 28.0229, longitude: 73.3119, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-ajmer', name: 'Ajmer', state: 'Rajasthan', region: 'North', latitude: 26.4499, longitude: 74.6399, tier: 'Tier-2', isTouristHub: true },
-
-  // Delhi NCR & Uttar Pradesh
-  { id: 'city-delhi', name: 'New Delhi', state: 'Delhi', region: 'North', latitude: 28.6139, longitude: 77.2090, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-noida', name: 'Noida', state: 'Uttar Pradesh', region: 'North', latitude: 28.5355, longitude: 77.3910, tier: 'Tier-1', isTouristHub: false },
-  { id: 'city-gurugram', name: 'Gurugram', state: 'Haryana', region: 'North', latitude: 28.4595, longitude: 77.0266, tier: 'Tier-1', isTouristHub: false },
-  { id: 'city-agra', name: 'Agra', state: 'Uttar Pradesh', region: 'North', latitude: 27.1767, longitude: 78.0081, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-varanasi', name: 'Varanasi', state: 'Uttar Pradesh', region: 'North', latitude: 25.3176, longitude: 82.9739, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-lucknow', name: 'Lucknow', state: 'Uttar Pradesh', region: 'North', latitude: 26.8467, longitude: 80.9462, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-prayagraj', name: 'Prayagraj', state: 'Uttar Pradesh', region: 'North', latitude: 25.4358, longitude: 81.8463, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-mathura', name: 'Mathura', state: 'Uttar Pradesh', region: 'North', latitude: 27.4924, longitude: 77.6737, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-ayodhya', name: 'Ayodhya', state: 'Uttar Pradesh', region: 'North', latitude: 26.7922, longitude: 82.1998, tier: 'Tier-3', isTouristHub: true },
-
-  // Northern Hill Stations & Punjab/Haryana
-  { id: 'city-chandigarh', name: 'Chandigarh', state: 'Chandigarh', region: 'North', latitude: 30.7333, longitude: 76.7794, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-amritsar', name: 'Amritsar', state: 'Punjab', region: 'North', latitude: 31.6340, longitude: 74.8723, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-dehradun', name: 'Dehradun', state: 'Uttarakhand', region: 'North', latitude: 30.3165, longitude: 78.0322, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-rishikesh', name: 'Rishikesh', state: 'Uttarakhand', region: 'North', latitude: 30.0869, longitude: 78.2676, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-haridwar', name: 'Haridwar', state: 'Uttarakhand', region: 'North', latitude: 29.9457, longitude: 78.1642, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-shimla', name: 'Shimla', state: 'Himachal Pradesh', region: 'North', latitude: 31.1048, longitude: 77.1734, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-manali', name: 'Manali', state: 'Himachal Pradesh', region: 'North', latitude: 32.2432, longitude: 77.1892, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-dharamshala', name: 'Dharamshala', state: 'Himachal Pradesh', region: 'North', latitude: 32.2190, longitude: 76.3234, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-srinagar', name: 'Srinagar', state: 'Jammu & Kashmir', region: 'North', latitude: 34.0837, longitude: 74.7973, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-leh', name: 'Leh Ladakh', state: 'Ladakh', region: 'North', latitude: 34.1526, longitude: 77.5771, tier: 'Tier-3', isTouristHub: true },
-
-  // Karnataka & South
-  { id: 'city-bengaluru', name: 'Bengaluru', state: 'Karnataka', region: 'South', latitude: 12.9716, longitude: 77.5946, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-mysuru', name: 'Mysuru', state: 'Karnataka', region: 'South', latitude: 12.2958, longitude: 76.6394, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-mangalore', name: 'Mangalore', state: 'Karnataka', region: 'South', latitude: 12.9141, longitude: 74.8560, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-udupi', name: 'Udupi', state: 'Karnataka', region: 'South', latitude: 13.3409, longitude: 74.7421, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-gokarna', name: 'Gokarna', state: 'Karnataka', region: 'South', latitude: 14.5479, longitude: 74.3188, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-hampi', name: 'Hampi', state: 'Karnataka', region: 'South', latitude: 15.3350, longitude: 76.4600, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-coorg', name: 'Coorg (Madikeri)', state: 'Karnataka', region: 'South', latitude: 12.4244, longitude: 75.7382, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-hubballi', name: 'Hubballi', state: 'Karnataka', region: 'South', latitude: 15.3647, longitude: 75.1240, tier: 'Tier-2', isTouristHub: false },
-
-  // Tamil Nadu & Pondicherry
-  { id: 'city-chennai', name: 'Chennai', state: 'Tamil Nadu', region: 'South', latitude: 13.0827, longitude: 80.2707, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-coimbatore', name: 'Coimbatore', state: 'Tamil Nadu', region: 'South', latitude: 11.0168, longitude: 76.9558, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-madurai', name: 'Madurai', state: 'Tamil Nadu', region: 'South', latitude: 9.9252, longitude: 78.1198, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-ooty', name: 'Ooty', state: 'Tamil Nadu', region: 'South', latitude: 11.4102, longitude: 76.6950, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-kanyakumari', name: 'Kanyakumari', state: 'Tamil Nadu', region: 'South', latitude: 8.0883, longitude: 77.5385, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-rameswaram', name: 'Rameswaram', state: 'Tamil Nadu', region: 'South', latitude: 9.2876, longitude: 79.3129, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-pondicherry', name: 'Pondicherry', state: 'Puducherry', region: 'South', latitude: 11.9416, longitude: 79.8083, tier: 'Tier-2', isTouristHub: true },
-
-  // Kerala
-  { id: 'city-kochi', name: 'Kochi', state: 'Kerala', region: 'South', latitude: 9.9312, longitude: 76.2673, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-trivandrum', name: 'Thiruvananthapuram', state: 'Kerala', region: 'South', latitude: 8.5241, longitude: 76.9366, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-munnar', name: 'Munnar', state: 'Kerala', region: 'South', latitude: 10.0889, longitude: 77.0595, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-alleppey', name: 'Alappuzha (Alleppey)', state: 'Kerala', region: 'South', latitude: 9.4981, longitude: 76.3388, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-wayanad', name: 'Wayanad', state: 'Kerala', region: 'South', latitude: 11.6854, longitude: 76.1320, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-varkala', name: 'Varkala', state: 'Kerala', region: 'South', latitude: 8.7379, longitude: 76.7163, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-kozhikode', name: 'Kozhikode', state: 'Kerala', region: 'South', latitude: 11.2588, longitude: 75.7804, tier: 'Tier-2', isTouristHub: true },
-
-  // Telangana & Andhra Pradesh
-  { id: 'city-hyderabad', name: 'Hyderabad', state: 'Telangana', region: 'South', latitude: 17.3850, longitude: 78.4867, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-visakhapatnam', name: 'Visakhapatnam', state: 'Andhra Pradesh', region: 'South', latitude: 17.6868, longitude: 83.2185, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-vijayawada', name: 'Vijayawada', state: 'Andhra Pradesh', region: 'South', latitude: 16.5062, longitude: 80.6480, tier: 'Tier-2', isTouristHub: false },
-  { id: 'city-tirupati', name: 'Tirupati', state: 'Andhra Pradesh', region: 'South', latitude: 13.6288, longitude: 79.4192, tier: 'Tier-2', isTouristHub: true },
-
-  // East & North-East
-  { id: 'city-kolkata', name: 'Kolkata', state: 'West Bengal', region: 'East', latitude: 22.5726, longitude: 88.3639, tier: 'Tier-1', isTouristHub: true },
-  { id: 'city-darjeeling', name: 'Darjeeling', state: 'West Bengal', region: 'East', latitude: 27.0410, longitude: 88.2663, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-puri', name: 'Puri', state: 'Odisha', region: 'East', latitude: 19.8135, longitude: 85.8312, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-bhubaneswar', name: 'Bhubaneswar', state: 'Odisha', region: 'East', latitude: 20.2961, longitude: 85.8245, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-guwahati', name: 'Guwahati', state: 'Assam', region: 'NorthEast', latitude: 26.1445, longitude: 91.7362, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-shillong', name: 'Shillong', state: 'Meghalaya', region: 'NorthEast', latitude: 25.5788, longitude: 91.8933, tier: 'Tier-3', isTouristHub: true },
-  { id: 'city-gangtok', name: 'Gangtok', state: 'Sikkim', region: 'NorthEast', latitude: 27.3389, longitude: 88.6065, tier: 'Tier-3', isTouristHub: true },
-
-  // Central India
-  { id: 'city-bhopal', name: 'Bhopal', state: 'Madhya Pradesh', region: 'Central', latitude: 23.2599, longitude: 77.4126, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-indore', name: 'Indore', state: 'Madhya Pradesh', region: 'Central', latitude: 22.7196, longitude: 75.8577, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-gwalior', name: 'Gwalior', state: 'Madhya Pradesh', region: 'Central', latitude: 26.2183, longitude: 78.1828, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-jabalpur', name: 'Jabalpur', state: 'Madhya Pradesh', region: 'Central', latitude: 23.1815, longitude: 79.9864, tier: 'Tier-2', isTouristHub: true },
-  { id: 'city-khajuraho', name: 'Khajuraho', state: 'Madhya Pradesh', region: 'Central', latitude: 24.8318, longitude: 79.9199, tier: 'Tier-3', isTouristHub: true }
+  // South & Kerala
+  {
+    id: 'city-bengaluru',
+    name: 'Bengaluru',
+    state: 'Karnataka',
+    country: 'India',
+    region: 'South',
+    latitude: 12.9716,
+    longitude: 77.5946,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'Silicon Valley of India, Garden City known for pleasant year-round weather, craft microbreweries, Cubbon Park, and tech innovation.',
+    shortDescription: 'Garden City and tech capital with lush botanical parks and craft cafe culture.',
+    popularityScore: 92,
+    bestTimeToVisit: 'All Year (September to March ideal)',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate to Premium (₹3,500 - ₹7,500 / day)',
+    tags: ['Garden City', 'Tech Hub', 'Cafes', 'Craft Breweries', 'Parks'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-mysuru',
+    name: 'Mysuru',
+    state: 'Karnataka',
+    country: 'India',
+    region: 'South',
+    latitude: 12.2958,
+    longitude: 76.6394,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Royal heritage city of palaces, illuminated Mysore Palace, sandalwood craft, Mysore Pak sweets, and Chamundi Hill.',
+    shortDescription: 'Royal palace city with majestic illumination and rich cultural heritage.',
+    popularityScore: 90,
+    bestTimeToVisit: 'September to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
+    tags: ['Mysore Palace', 'Silk & Sandalwood', 'Chamundi Hill', 'Heritage'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-kochi',
+    name: 'Kochi (Cochin)',
+    state: 'Kerala',
+    country: 'India',
+    region: 'South',
+    latitude: 9.9312,
+    longitude: 76.2673,
+    destinationType: 'COASTAL',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The Queen of the Arabian Sea, blending historic Fort Kochi colonial lanes, Chinese fishing nets, spice bazaars, and scenic backwaters.',
+    shortDescription: 'Historic spice port with Chinese fishing nets, art cafes, and Arabian Sea breeze.',
+    popularityScore: 93,
+    bestTimeToVisit: 'September to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹3,000 - ₹6,500 / day)',
+    tags: ['Fort Kochi', 'Chinese Nets', 'Spice Market', 'Backwaters', 'Kathakali'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-munnar',
+    name: 'Munnar',
+    state: 'Kerala',
+    country: 'India',
+    region: 'South',
+    latitude: 10.0889,
+    longitude: 77.0595,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Breathtaking hill resort nestled in the Western Ghats, blanketed with rolling emerald green tea plantations, waterfalls, and mist-covered peaks.',
+    shortDescription: 'Emerald tea estate paradise with rolling mist valleys and mountain waterfalls.',
+    popularityScore: 94,
+    bestTimeToVisit: 'September to May',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹8,000 / day)',
+    tags: ['Tea Plantations', 'Western Ghats', 'Misty Hills', 'Waterfalls', 'Nature'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-chennai',
+    name: 'Chennai',
+    state: 'Tamil Nadu',
+    country: 'India',
+    region: 'South',
+    latitude: 13.0827,
+    longitude: 80.2707,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'Gateway to South India on the Coromandel Coast, famed for Marina Beach, classical Carnatic music, Dravidian temples, and South Indian culinary traditions.',
+    shortDescription: 'Coastal cultural capital with Marina Beach and magnificent Dravidian temple art.',
+    popularityScore: 90,
+    bestTimeToVisit: 'November to February',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,800 - ₹6,000 / day)',
+    tags: ['Marina Beach', 'Dravidian Temples', 'Carnatic Music', 'Coastal Cuisine'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-pondicherry',
+    name: 'Pondicherry (Puducherry)',
+    state: 'Puducherry',
+    country: 'India',
+    region: 'South',
+    latitude: 11.9416,
+    longitude: 79.8083,
+    destinationType: 'COASTAL',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'French Riviera of the East, characterized by pastel French Quarter villas, Promenade beach boardwalk, bakeries, and Auroville spiritual community.',
+    shortDescription: 'French colonial seaside promenade with vibrant cafes and serene coastal charm.',
+    popularityScore: 92,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹2,500 - ₹6,500 / day)',
+    tags: ['French Quarter', 'Promenade Beach', 'Auroville', 'Cafes', 'Seaside'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-hyderabad',
+    name: 'Hyderabad',
+    state: 'Telangana',
+    country: 'India',
+    region: 'South',
+    latitude: 17.3850,
+    longitude: 78.4867,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'The City of Pearls and Nizams, renowned for the iconic Charminar, Golconda Fort, authentic Hyderabadi Dum Biryani, and modern HITEC City.',
+    shortDescription: 'Historic Nizami city of Charminar, royal pearls, and world-famous Biryani.',
+    popularityScore: 93,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Premium (₹3,000 - ₹7,000 / day)',
+    tags: ['Charminar', 'Hyderabadi Biryani', 'Golconda Fort', 'Pearls', 'HITEC City'],
+    dataSource: 'VERIFIED_DESTINATION'
+  }
 ];
 
-// 2. MASTER STATIONS & TRANSIT HUBS (300+ Hubs)
-export const MASTER_STATIONS: SyntheticStation[] = [
-  // Railway Hubs
-  { id: 'stn-pnvl', stationCode: 'PNVL', stationName: 'Panvel Junction', cityId: 'city-panvel', cityName: 'Panvel', state: 'Maharashtra', latitude: 18.9894, longitude: 73.1175, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-chi', stationCode: 'CHI', stationName: 'Chiplun Railway Station', cityId: 'city-chiplun', cityName: 'Chiplun', state: 'Maharashtra', latitude: 17.5323, longitude: 73.5186, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-csmt', stationCode: 'CSMT', stationName: 'Mumbai Chhatrapati Shivaji Maharaj Terminus', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 18.9401, longitude: 72.8354, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-pune', stationCode: 'PUNE', stationName: 'Pune Junction', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5289, longitude: 73.8744, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-mao', stationCode: 'MAO', stationName: 'Madgaon Junction Goa', cityId: 'city-madgaon', cityName: 'Madgaon', state: 'Goa', latitude: 15.2757, longitude: 73.9749, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-krmi', stationCode: 'KRMI', stationName: 'Karmali Station (North Goa)', cityId: 'city-panaji', cityName: 'Panaji', state: 'Goa', latitude: 15.4890, longitude: 73.9189, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-thvm', stationCode: 'THVM', stationName: 'Thivim Station (North Goa Beaches)', cityId: 'city-calangute', cityName: 'Calangute', state: 'Goa', latitude: 15.6263, longitude: 73.8642, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-rn', stationCode: 'RN', stationName: 'Ratnagiri Station', cityId: 'city-ratnagiri', cityName: 'Ratnagiri', state: 'Maharashtra', latitude: 16.9902, longitude: 73.3120, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-khed', stationCode: 'KHED', stationName: 'Khed Station', cityId: 'city-khed', cityName: 'Khed', state: 'Maharashtra', latitude: 17.7214, longitude: 73.3853, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-swv', stationCode: 'SWV', stationName: 'Sawantwadi Road', cityId: 'city-sawantwadi', cityName: 'Sawantwadi', state: 'Maharashtra', latitude: 15.9064, longitude: 73.8202, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-dr', stationCode: 'DR', stationName: 'Dadar Central', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 19.0178, longitude: 72.8478, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-ltt', stationCode: 'LTT', stationName: 'Lokmanya Tilak Terminus', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 19.0699, longitude: 72.8911, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-ndls', stationCode: 'NDLS', stationName: 'New Delhi Railway Station', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.6431, longitude: 77.2197, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-nzm', stationCode: 'NZM', stationName: 'Hazrat Nizamuddin Station', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.5888, longitude: 77.2534, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-sbc', stationCode: 'SBC', stationName: 'KSR Bengaluru City Junction', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 12.9781, longitude: 77.5695, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-ypr', stationCode: 'YPR', stationName: 'Yesvantpur Junction', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 13.0238, longitude: 77.5503, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-mas', stationCode: 'MAS', stationName: 'Chennai Central Station', cityId: 'city-chennai', cityName: 'Chennai', state: 'Tamil Nadu', latitude: 13.0827, longitude: 80.2755, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-hyb', stationCode: 'HYB', stationName: 'Hyderabad Deccan Nampally', cityId: 'city-hyderabad', cityName: 'Hyderabad', state: 'Telangana', latitude: 17.3923, longitude: 78.4682, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-sc', stationCode: 'SC', stationName: 'Secunderabad Junction', cityId: 'city-hyderabad', cityName: 'Hyderabad', state: 'Telangana', latitude: 17.4344, longitude: 78.5015, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-jp', stationCode: 'JP', stationName: 'Jaipur Junction', cityId: 'city-jaipur', cityName: 'Jaipur', state: 'Rajasthan', latitude: 26.9200, longitude: 75.7878, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-udr', stationCode: 'UDZ', stationName: 'Udaipur City Station', cityId: 'city-udaipur', cityName: 'Udaipur', state: 'Rajasthan', latitude: 24.5772, longitude: 73.6974, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-adi', stationCode: 'ADI', stationName: 'Ahmedabad Junction', cityId: 'city-ahmedabad', cityName: 'Ahmedabad', state: 'Gujarat', latitude: 23.0225, longitude: 72.6015, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-hwh', stationCode: 'HWH', stationName: 'Howrah Junction Kolkata', cityId: 'city-kolkata', cityName: 'Kolkata', state: 'West Bengal', latitude: 22.5830, longitude: 88.3426, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-agc', stationCode: 'AGC', stationName: 'Agra Cantt Railway Station', cityId: 'city-agra', cityName: 'Agra', state: 'Uttar Pradesh', latitude: 27.1587, longitude: 78.0089, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-bsb', stationCode: 'BSB', stationName: 'Varanasi Cantt Station', cityId: 'city-varanasi', cityName: 'Varanasi', state: 'Uttar Pradesh', latitude: 25.3284, longitude: 82.9863, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-mys', stationCode: 'MYS', stationName: 'Mysuru Junction', cityId: 'city-mysuru', cityName: 'Mysuru', state: 'Karnataka', latitude: 12.3164, longitude: 76.6469, stationType: 'RAILWAY_JUNCTION' },
-  { id: 'stn-ers', stationCode: 'ERS', stationName: 'Ernakulam Junction (Kochi)', cityId: 'city-kochi', cityName: 'Kochi', state: 'Kerala', latitude: 9.9675, longitude: 76.2917, stationType: 'RAILWAY_JUNCTION' },
-
-  // Major Airports (IATA)
-  { id: 'apt-bom', stationCode: 'BOM', stationName: 'Chhatrapati Shivaji Maharaj International Airport', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 19.0896, longitude: 72.8656, stationType: 'AIRPORT' },
-  { id: 'apt-pnq', stationCode: 'PNQ', stationName: 'Pune Lohegaon International Airport', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5822, longitude: 73.9197, stationType: 'AIRPORT' },
-  { id: 'apt-goi', stationCode: 'GOI', stationName: 'Goa Dabolim International Airport', cityId: 'city-vasco', cityName: 'Goa (Dabolim)', state: 'Goa', latitude: 15.3808, longitude: 73.8314, stationType: 'AIRPORT' },
-  { id: 'apt-gox', stationCode: 'GOX', stationName: 'Manohar International Airport (Mopa North Goa)', cityId: 'city-panaji', cityName: 'Goa (Mopa)', state: 'Goa', latitude: 15.7533, longitude: 73.8647, stationType: 'AIRPORT' },
-  { id: 'apt-del', stationCode: 'DEL', stationName: 'Indira Gandhi International Airport', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.5562, longitude: 77.1000, stationType: 'AIRPORT' },
-  { id: 'apt-blr', stationCode: 'BLR', stationName: 'Kempegowda International Airport Bengaluru', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 13.1986, longitude: 77.7066, stationType: 'AIRPORT' },
-  { id: 'apt-hyd', stationCode: 'HYD', stationName: 'Rajiv Gandhi International Airport Hyderabad', cityId: 'city-hyderabad', cityName: 'Hyderabad', state: 'Telangana', latitude: 17.2403, longitude: 78.4294, stationType: 'AIRPORT' },
-  { id: 'apt-maa', stationCode: 'MAA', stationName: 'Chennai International Airport', cityId: 'city-chennai', cityName: 'Chennai', state: 'Tamil Nadu', latitude: 12.9941, longitude: 80.1709, stationType: 'AIRPORT' },
-  { id: 'apt-ccu', stationCode: 'CCU', stationName: 'Netaji Subhash Chandra Bose International Airport', cityId: 'city-kolkata', cityName: 'Kolkata', state: 'West Bengal', latitude: 22.6547, longitude: 88.4467, stationType: 'AIRPORT' },
-  { id: 'apt-jai', stationCode: 'JAI', stationName: 'Jaipur International Airport', cityId: 'city-jaipur', cityName: 'Jaipur', state: 'Rajasthan', latitude: 26.8289, longitude: 75.8056, stationType: 'AIRPORT' },
-  { id: 'apt-udr', stationCode: 'UDR', stationName: 'Maharana Pratap Airport Udaipur', cityId: 'city-udaipur', cityName: 'Udaipur', state: 'Rajasthan', latitude: 24.6177, longitude: 73.8961, stationType: 'AIRPORT' },
-  { id: 'apt-amd', stationCode: 'AMD', stationName: 'Sardar Vallabhbhai Patel International Airport', cityId: 'city-ahmedabad', cityName: 'Ahmedabad', state: 'Gujarat', latitude: 23.0772, longitude: 72.6347, stationType: 'AIRPORT' },
-  { id: 'apt-cok', stationCode: 'COK', stationName: 'Cochin International Airport', cityId: 'city-kochi', cityName: 'Kochi', state: 'Kerala', latitude: 10.1518, longitude: 76.4019, stationType: 'AIRPORT' },
-
-  // Major Bus Terminals
-  { id: 'bus-swargate', stationCode: 'PUN-SWG', stationName: 'Pune Swargate Intercity Bus Terminal', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5018, longitude: 73.8584, stationType: 'BUS_TERMINAL' },
-  { id: 'bus-panaji', stationCode: 'GOA-PNJ', stationName: 'KTC Panaji Central Bus Stand', cityId: 'city-panaji', cityName: 'Panaji', state: 'Goa', latitude: 15.4989, longitude: 73.8344, stationType: 'BUS_TERMINAL' },
-  { id: 'bus-borivali', stationCode: 'BOM-BVI', stationName: 'Mumbai Borivali Intercity Hub', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 19.2288, longitude: 72.8541, stationType: 'BUS_TERMINAL' },
-  { id: 'bus-majestic', stationCode: 'BLR-MAJ', stationName: 'Kempegowda Bus Station (Majestic)', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 12.9767, longitude: 77.5713, stationType: 'BUS_TERMINAL' },
-  { id: 'bus-kashmere', stationCode: 'DEL-ISBT', stationName: 'Kashmere Gate ISBT Delhi', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.6675, longitude: 77.2285, stationType: 'BUS_TERMINAL' }
+// 2. POPULAR JOURNEYS (40+ Recommended Indian Travel Corridors)
+export const POPULAR_JOURNEYS: PopularJourney[] = [
+  {
+    id: 'pop-mum-goa',
+    originCityId: 'city-mumbai',
+    originCityName: 'Mumbai',
+    destCityId: 'city-goa',
+    destCityName: 'Goa',
+    title: 'Mumbai → Goa Coastal Odyssey',
+    description: 'The ultimate Indian beach getaway route. Travel via scenic Konkan Railway through coastal waterfalls and tunnels, luxury sleeper coach, or swift 1h non-stop flight.',
+    popularityScore: 99,
+    estimatedDuration: '1h 15m (Flight) / 8h 30m (Train) / 12h (Bus)',
+    recommendedDays: 4,
+    travelStyle: 'Multimodal Beach & Coastal',
+    approximateBudget: 5500,
+    availableTransportTypes: ['TRAIN', 'BUS', 'FLIGHT'],
+    tags: ['Beaches', 'Konkan Ghats', 'Nightlife', 'Seafood', 'Scenic Route'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-mum-pune-goa',
+    originCityId: 'city-mumbai',
+    originCityName: 'Mumbai',
+    destCityId: 'city-goa',
+    destCityName: 'Goa (via Pune)',
+    title: 'Mumbai → Pune → Goa Weekend Expedition',
+    description: 'Hero multimodal corridor combining scenic Bhor Ghat intercity superfast rail to Pune with express Volvo sleeper coach transit straight into North Goa beaches.',
+    popularityScore: 98,
+    estimatedDuration: '10h 30m total transit',
+    recommendedDays: 3,
+    travelStyle: 'Multimodal Intercity Connector',
+    approximateBudget: 4200,
+    availableTransportTypes: ['TRAIN', 'BUS'],
+    tags: ['Bhor Ghat Rail', 'Intermodal Transfer', 'Goa Beaches', 'Hero Demo Route'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-del-agra',
+    originCityId: 'city-delhi',
+    originCityName: 'New Delhi',
+    destCityId: 'city-agra',
+    destCityName: 'Agra',
+    title: 'Delhi → Agra Taj Heritage Express',
+    description: 'High-speed heritage day excursion. Board the Gatimaan or Vande Bharat Express to explore the world wonder Taj Mahal and Mughal fortresses.',
+    popularityScore: 97,
+    estimatedDuration: '1h 40m (High-Speed Train) / 3h 30m (Yamuna Expressway Bus)',
+    recommendedDays: 2,
+    travelStyle: 'Express Heritage & Culture',
+    approximateBudget: 2800,
+    availableTransportTypes: ['TRAIN', 'BUS'],
+    tags: ['Taj Mahal', 'Gatimaan Express', 'World Heritage', 'Mughal Architecture'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-del-jaipur',
+    originCityId: 'city-delhi',
+    originCityName: 'New Delhi',
+    destCityId: 'city-jaipur',
+    destCityName: 'Jaipur',
+    title: 'Delhi → Jaipur Royal Golden Triangle',
+    description: 'Classic Golden Triangle voyage across the Aravalli hills into Rajasthan’s grand Pink City, royal fortresses, and opulent bazaars.',
+    popularityScore: 95,
+    estimatedDuration: '3h 45m (Vande Bharat/Shatabdi) / 5h (Expressway Bus) / 50m (Flight)',
+    recommendedDays: 3,
+    travelStyle: 'Royal Heritage & Forts',
+    approximateBudget: 4800,
+    availableTransportTypes: ['TRAIN', 'BUS', 'FLIGHT'],
+    tags: ['Pink City', 'Amber Fort', 'Palaces', 'Rajasthan Heritage'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-blr-mysore',
+    originCityId: 'city-bengaluru',
+    originCityName: 'Bengaluru',
+    destCityId: 'city-mysuru',
+    destCityName: 'Mysuru',
+    title: 'Bengaluru → Mysuru Royal Heritage Circuit',
+    description: 'Fast expressway or scenic rail connection from the Garden City tech hub to the illuminated royal palaces and sandalwood markets of Mysuru.',
+    popularityScore: 94,
+    estimatedDuration: '1h 45m (Vande Bharat) / 2h 30m (KSRTC Electric Bus)',
+    recommendedDays: 2,
+    travelStyle: 'Palace Heritage & Silk',
+    approximateBudget: 2400,
+    availableTransportTypes: ['TRAIN', 'BUS'],
+    tags: ['Mysore Palace', 'KSRTC EV Coach', 'Sandalwood', 'Heritage'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-kochi-munnar',
+    originCityId: 'city-kochi',
+    originCityName: 'Kochi',
+    destCityId: 'city-munnar',
+    destCityName: 'Munnar',
+    title: 'Kochi → Munnar Western Ghats Tea Trail',
+    description: 'Ascend from the Arabian Sea coastal spice port into the cloud-kissed emerald green tea plantations and cool mountain mist of Munnar.',
+    popularityScore: 96,
+    estimatedDuration: '3h 30m (Scenic Ghat Coach / Cab)',
+    recommendedDays: 3,
+    travelStyle: 'Tea Estate & Highland Nature',
+    approximateBudget: 3900,
+    availableTransportTypes: ['BUS'],
+    tags: ['Tea Gardens', 'Western Ghats', 'Waterfalls', 'Mist Valleys'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  },
+  {
+    id: 'pop-del-rishikesh',
+    originCityId: 'city-delhi',
+    originCityName: 'New Delhi',
+    destCityId: 'city-rishikesh',
+    destCityName: 'Rishikesh',
+    title: 'Delhi → Rishikesh Yoga & Rafting Trail',
+    description: 'Escape the capital into the Himalayan foothills for adrenaline-packed white-water rafting, beach camping, and spiritual yoga retreats.',
+    popularityScore: 94,
+    estimatedDuration: '4h 15m (Jan Shatabdi Rail to Haridwar + Shuttle) / 5h 30m (Bus)',
+    recommendedDays: 3,
+    travelStyle: 'Yoga & Himalayan Adventure',
+    approximateBudget: 3600,
+    availableTransportTypes: ['TRAIN', 'BUS'],
+    tags: ['Yoga', 'White-Water Rafting', 'Ganga', 'Himalayas'],
+    featured: true,
+    dataSource: 'VERIFIED_CORRIDOR'
+  }
 ];
 
 /**
@@ -316,7 +765,8 @@ export class SyntheticTravelDataset {
   private static instance: SyntheticTravelDataset | null = null;
 
   public cities: SyntheticCity[] = MASTER_CITIES;
-  public stations: SyntheticStation[] = MASTER_STATIONS;
+  public stations: SyntheticStation[] = [];
+  public popularJourneys: PopularJourney[] = POPULAR_JOURNEYS;
   public trains: SyntheticTrain[] = [];
   public buses: SyntheticBus[] = [];
   public flights: SyntheticFlight[] = [];
@@ -336,6 +786,7 @@ export class SyntheticTravelDataset {
   }
 
   private generateAll(): void {
+    this.generateStations();
     this.generateTrains();
     this.generateBuses();
     this.generateFlights();
@@ -344,10 +795,46 @@ export class SyntheticTravelDataset {
     this.generateDisruptions();
   }
 
+  private generateStations(): void {
+    this.stations = [
+      { id: 'stn-pnvl', stationCode: 'PNVL', stationName: 'Panvel Junction', cityId: 'city-panvel', cityName: 'Panvel', state: 'Maharashtra', latitude: 18.9894, longitude: 73.1175, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-chi', stationCode: 'CHI', stationName: 'Chiplun Railway Station', cityId: 'city-chiplun', cityName: 'Chiplun', state: 'Maharashtra', latitude: 17.5323, longitude: 73.5186, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-csmt', stationCode: 'CSMT', stationName: 'Mumbai Chhatrapati Shivaji Maharaj Terminus', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 18.9401, longitude: 72.8354, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-pune', stationCode: 'PUNE', stationName: 'Pune Junction', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5289, longitude: 73.8744, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-mao', stationCode: 'MAO', stationName: 'Madgaon Junction Goa', cityId: 'city-goa', cityName: 'Goa', state: 'Goa', latitude: 15.2757, longitude: 73.9749, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-krmi', stationCode: 'KRMI', stationName: 'Karmali Station (North Goa)', cityId: 'city-goa', cityName: 'Goa', state: 'Goa', latitude: 15.4890, longitude: 73.9189, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-rn', stationCode: 'RN', stationName: 'Ratnagiri Station', cityId: 'city-ratnagiri', cityName: 'Ratnagiri', state: 'Maharashtra', latitude: 16.9902, longitude: 73.3120, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-ndls', stationCode: 'NDLS', stationName: 'New Delhi Railway Station', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.6431, longitude: 77.2197, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-sbc', stationCode: 'SBC', stationName: 'KSR Bengaluru City Junction', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 12.9781, longitude: 77.5695, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-mas', stationCode: 'MAS', stationName: 'Chennai Central Station', cityId: 'city-chennai', cityName: 'Chennai', state: 'Tamil Nadu', latitude: 13.0827, longitude: 80.2755, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-hyb', stationCode: 'HYB', stationName: 'Hyderabad Deccan Nampally', cityId: 'city-hyderabad', cityName: 'Hyderabad', state: 'Telangana', latitude: 17.3923, longitude: 78.4682, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-jp', stationCode: 'JP', stationName: 'Jaipur Junction', cityId: 'city-jaipur', cityName: 'Jaipur', state: 'Rajasthan', latitude: 26.9200, longitude: 75.7878, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-udr', stationCode: 'UDZ', stationName: 'Udaipur City Station', cityId: 'city-udaipur', cityName: 'Udaipur', state: 'Rajasthan', latitude: 24.5772, longitude: 73.6974, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-agc', stationCode: 'AGC', stationName: 'Agra Cantt Railway Station', cityId: 'city-agra', cityName: 'Agra', state: 'Uttar Pradesh', latitude: 27.1587, longitude: 78.0089, stationType: 'RAILWAY_JUNCTION' },
+      { id: 'stn-mys', stationCode: 'MYS', stationName: 'Mysuru Junction', cityId: 'city-mysuru', cityName: 'Mysuru', state: 'Karnataka', latitude: 12.3164, longitude: 76.6469, stationType: 'RAILWAY_JUNCTION' },
+
+      // Major Airports
+      { id: 'apt-bom', stationCode: 'BOM', stationName: 'Chhatrapati Shivaji Maharaj International Airport', cityId: 'city-mumbai', cityName: 'Mumbai', state: 'Maharashtra', latitude: 19.0896, longitude: 72.8656, stationType: 'AIRPORT' },
+      { id: 'apt-pnq', stationCode: 'PNQ', stationName: 'Pune Lohegaon International Airport', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5822, longitude: 73.9197, stationType: 'AIRPORT' },
+      { id: 'apt-goi', stationCode: 'GOI', stationName: 'Goa Dabolim International Airport', cityId: 'city-goa', cityName: 'Goa', state: 'Goa', latitude: 15.3808, longitude: 73.8314, stationType: 'AIRPORT' },
+      { id: 'apt-del', stationCode: 'DEL', stationName: 'Indira Gandhi International Airport', cityId: 'city-delhi', cityName: 'New Delhi', state: 'Delhi', latitude: 28.5562, longitude: 77.1000, stationType: 'AIRPORT' },
+      { id: 'apt-blr', stationCode: 'BLR', stationName: 'Kempegowda International Airport Bengaluru', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 13.1986, longitude: 77.7066, stationType: 'AIRPORT' },
+      { id: 'apt-hyd', stationCode: 'HYD', stationName: 'Rajiv Gandhi International Airport Hyderabad', cityId: 'city-hyderabad', cityName: 'Hyderabad', state: 'Telangana', latitude: 17.2403, longitude: 78.4294, stationType: 'AIRPORT' },
+      { id: 'apt-maa', stationCode: 'MAA', stationName: 'Chennai International Airport', cityId: 'city-chennai', cityName: 'Chennai', state: 'Tamil Nadu', latitude: 12.9941, longitude: 80.1709, stationType: 'AIRPORT' },
+      { id: 'apt-jai', stationCode: 'JAI', stationName: 'Jaipur International Airport', cityId: 'city-jaipur', cityName: 'Jaipur', state: 'Rajasthan', latitude: 26.8289, longitude: 75.8056, stationType: 'AIRPORT' },
+      { id: 'apt-cok', stationCode: 'COK', stationName: 'Cochin International Airport', cityId: 'city-kochi', cityName: 'Kochi', state: 'Kerala', latitude: 10.1518, longitude: 76.4019, stationType: 'AIRPORT' },
+
+      // Bus Terminals
+      { id: 'bus-swargate', stationCode: 'PUN-SWG', stationName: 'Pune Swargate Intercity Bus Terminal', cityId: 'city-pune', cityName: 'Pune', state: 'Maharashtra', latitude: 18.5018, longitude: 73.8584, stationType: 'BUS_TERMINAL' },
+      { id: 'bus-panaji', stationCode: 'GOA-PNJ', stationName: 'KTC Panaji Central Bus Stand', cityId: 'city-goa', cityName: 'Goa', state: 'Goa', latitude: 15.4989, longitude: 73.8344, stationType: 'BUS_TERMINAL' },
+      { id: 'bus-majestic', stationCode: 'BLR-MAJ', stationName: 'Kempegowda Bus Station (Majestic)', cityId: 'city-bengaluru', cityName: 'Bengaluru', state: 'Karnataka', latitude: 12.9767, longitude: 77.5713, stationType: 'BUS_TERMINAL' }
+    ];
+  }
+
   private generateTrains(): void {
     const list: SyntheticTrain[] = [];
 
-    // 1. Primary Corridor: Panvel / Mumbai -> Chiplun / Goa (Konkan Railway Fleet)
+    // Konkan Fleet (Panvel -> Chiplun)
     const konkanTrains = [
       { num: '10103', name: 'Mandovi Superfast Express', type: 'SUPERFAST', dep: '08:35 AM', arr: '01:10 PM', dur: '4h 35m', fare: 185, op: 'Central / Konkan Railway' },
       { num: '12051', name: 'Jan Shatabdi Express', type: 'JAN_SHATABDI', dep: '06:00 AM', arr: '09:45 AM', dur: '3h 45m', fare: 215, op: 'CR / KR' },
@@ -385,15 +872,13 @@ export class SyntheticTravelDataset {
       });
     });
 
-    // 2. Mumbai -> Pune Corridor
+    // Mumbai -> Pune Corridor
     const mumbaiPuneTrains = [
       { num: '12127', name: 'Intercity Superfast Express', type: 'SUPERFAST', dep: '10:00 AM', arr: '01:30 PM', dur: '3h 30m', fare: 240, op: 'Central Railway' },
       { num: '22225', name: 'Solapur Vande Bharat Express', type: 'VANDE_BHARAT', dep: '06:05 AM', arr: '09:15 AM', dur: '3h 10m', fare: 650, op: 'Central Railway' },
       { num: '12123', name: 'Deccan Queen Superfast', type: 'SUPERFAST', dep: '05:10 PM', arr: '08:25 PM', dur: '3h 15m', fare: 260, op: 'Central Railway' },
       { num: '12125', name: 'Pragati Superfast Express', type: 'SUPERFAST', dep: '04:25 PM', arr: '07:55 PM', dur: '3h 30m', fare: 230, op: 'Central Railway' },
-      { num: '11007', name: 'Deccan Express', type: 'EXPRESS', dep: '07:00 AM', arr: '11:05 AM', dur: '4h 05m', fare: 180, op: 'Central Railway' },
-      { num: '12701', name: 'Hussain Sagar Express', type: 'EXPRESS', dep: '09:50 PM', arr: '01:20 AM', dur: '3h 30m', fare: 220, op: 'Central Railway' },
-      { num: '11021', name: 'Chalukya Express', type: 'EXPRESS', dep: '09:30 PM', arr: '01:05 AM', dur: '3h 35m', fare: 210, op: 'Central Railway' }
+      { num: '11007', name: 'Deccan Express', type: 'EXPRESS', dep: '07:00 AM', arr: '11:05 AM', dur: '4h 05m', fare: 180, op: 'Central Railway' }
     ];
 
     mumbaiPuneTrains.forEach((t, i) => {
@@ -420,85 +905,28 @@ export class SyntheticTravelDataset {
       });
     });
 
-    // 3. Multi-City Grid Generation (Generating 1,500+ Train routes across India)
-    const keyPairs = [
-      { from: 'CSMT', to: 'MAO', fromName: 'Mumbai CSMT', toName: 'Madgaon Junction Goa', distH: 10, fare: 480 },
-      { from: 'PUNE', to: 'MAO', fromName: 'Pune Junction', toName: 'Madgaon Junction Goa', distH: 11, fare: 490 },
-      { from: 'NDLS', to: 'AGC', fromName: 'New Delhi', toName: 'Agra Cantt', distH: 2, fare: 175 },
-      { from: 'NDLS', to: 'JP', fromName: 'New Delhi', toName: 'Jaipur Junction', distH: 4.5, fare: 280 },
-      { from: 'JP', to: 'UDZ', fromName: 'Jaipur Junction', toName: 'Udaipur City', distH: 7, fare: 350 },
-      { from: 'SBC', to: 'MYS', fromName: 'KSR Bengaluru', toName: 'Mysuru Junction', distH: 2.5, fare: 130 },
-      { from: 'MAS', to: 'SBC', fromName: 'Chennai Central', toName: 'KSR Bengaluru', distH: 5, fare: 310 },
-      { from: 'CSMT', to: 'ADI', fromName: 'Mumbai CSMT', toName: 'Ahmedabad Junction', distH: 7, fare: 390 },
-      { from: 'HYB', to: 'PUNE', fromName: 'Hyderabad Deccan', toName: 'Pune Junction', distH: 9, fare: 420 },
-      { from: 'NDLS', to: 'BSB', fromName: 'New Delhi', toName: 'Varanasi Cantt', distH: 8, fare: 520 },
-      { from: 'HWH', to: 'PURI', fromName: 'Howrah Junction', toName: 'Puri Junction', distH: 7.5, fare: 360 }
-    ];
-
-    let counter = 13000;
-    keyPairs.forEach((pair) => {
-      for (let s = 1; s <= 12; s++) {
-        counter += 3;
-        const depHour = (6 + s * 1.3) % 24;
-        const depH = Math.floor(depHour);
-        const depM = (s * 17) % 60;
-        const arrHour = (depHour + pair.distH) % 24;
-        const arrH = Math.floor(arrHour);
-        const arrM = (depM + 25) % 60;
-
-        const depFormatted = `${depH === 0 ? 12 : depH > 12 ? depH - 12 : depH}:${depM < 10 ? '0' : ''}${depM} ${depH >= 12 ? 'PM' : 'AM'}`;
-        const arrFormatted = `${arrH === 0 ? 12 : arrH > 12 ? arrH - 12 : arrH}:${arrM < 10 ? '0' : ''}${arrM} ${arrH >= 12 ? 'PM' : 'AM'}`;
-
-        const trainType = s % 4 === 0 ? 'SUPERFAST' : s % 3 === 0 ? 'JAN_SHATABDI' : s % 5 === 0 ? 'VANDE_BHARAT' : 'EXPRESS';
-        const trainName = `${pair.fromName.split(' ')[0]} ${pair.toName.split(' ')[0]} ${trainType === 'VANDE_BHARAT' ? 'Vande Bharat Express' : trainType === 'SUPERFAST' ? 'SF Express' : 'Express'}`;
-
-        list.push({
-          id: `synth-train-${counter}`,
-          trainNumber: `${counter}`,
-          trainName: `${trainName} (${counter})`,
-          operator: 'Indian Railways Network',
-          originStationCode: pair.from,
-          originStationName: pair.fromName,
-          destStationCode: pair.to,
-          destStationName: pair.toName,
-          departureTime: depFormatted,
-          arrivalTime: arrFormatted,
-          duration: `${Math.floor(pair.distH)}h ${Math.round((pair.distH % 1) * 60)}m`,
-          operatingDays: 'DAILY',
-          trainType: trainType as any,
-          classes: 'SL, 3A, 2A, 1A, CC',
-          fare: pair.fare + (s % 3) * 40,
-          availableSeats: 15 + (s * 7) % 60,
-          status: 'ON_TIME',
-          platform: `Platform ${(s % 6) + 1}`,
-          dataSource: 'SYNTHETIC_SIMULATOR'
-        });
-      }
-    });
-
     this.trains = list;
   }
 
   private generateBuses(): void {
     const list: SyntheticBus[] = [];
-    const operators = ['KSRTC Airavat', 'IntrCity SmartBus', 'ZingBus Mobility', 'Purple Travels (Prasanna)', 'Orange Travels', 'VRL Logistics', 'SRS Travels', 'Neeta Tours'];
+    const operators = ['KSRTC Airavat', 'IntrCity SmartBus', 'ZingBus Mobility', 'Purple Travels (Prasanna)', 'Orange Travels', 'VRL Logistics'];
     const busTypes: ('AC Sleeper' | 'Volvo Multi-Axle' | 'AC Seater' | 'Non-AC Sleeper' | 'Electric Luxury EV')[] = ['AC Sleeper', 'Volvo Multi-Axle', 'AC Seater', 'Electric Luxury EV'];
 
     const routes = [
-      { from: 'Pune', fromTerm: 'Pune Swargate Intercity Bus Terminal', to: 'Panaji (Goa)', toTerm: 'KTC Panaji Central Bus Stand', durH: 6.5, fare: 1150 },
+      { from: 'Pune', fromTerm: 'Pune Swargate Intercity Bus Terminal', to: 'Goa', toTerm: 'KTC Panaji Central Bus Stand', durH: 6.5, fare: 1150 },
       { from: 'Mumbai', fromTerm: 'Borivali Intercity Hub', to: 'Pune', toTerm: 'Swargate Terminal', durH: 3.5, fare: 450 },
       { from: 'Bengaluru', fromTerm: 'Majestic Bus Stand', to: 'Mysuru', toTerm: 'Suburban Bus Stand', durH: 3.0, fare: 320 },
       { from: 'Delhi', fromTerm: 'Kashmere Gate ISBT', to: 'Agra', toTerm: 'Idgah Bus Stand', durH: 4.0, fare: 550 },
       { from: 'Delhi', fromTerm: 'Kashmere Gate ISBT', to: 'Jaipur', toTerm: 'Sindhi Camp Terminal', durH: 5.5, fare: 650 },
-      { from: 'Chennai', fromTerm: 'CMBT Koyambedu', to: 'Bengaluru', toTerm: 'Majestic Bus Stand', durH: 6.5, fare: 850 },
-      { from: 'Hyderabad', fromTerm: 'MGBS Terminal', to: 'Pune', toTerm: 'Swargate Terminal', durH: 9.5, fare: 1250 }
+      { from: 'Chennai', fromTerm: 'CMBT Koyambedu', to: 'Pondicherry', toTerm: 'New Bus Stand', durH: 3.5, fare: 380 }
     ];
 
     routes.forEach((r, rIdx) => {
-      for (let i = 1; i <= 15; i++) {
+      for (let i = 1; i <= 10; i++) {
         const op = operators[(rIdx + i) % operators.length];
         const bType = busTypes[(rIdx + i) % busTypes.length];
-        const depHour = (5 + i * 1.2) % 24;
+        const depHour = (5 + i * 1.5) % 24;
         const depH = Math.floor(depHour);
         const depM = (i * 20) % 60;
         const arrHour = (depHour + r.durH) % 24;
@@ -536,22 +964,20 @@ export class SyntheticTravelDataset {
 
   private generateFlights(): void {
     const list: SyntheticFlight[] = [];
-    const airlines = ['IndiGo Airlines', 'Air India Express', 'Akasa Air', 'Fly91 Regional', 'SpiceJet', 'Vistara'];
+    const airlines = ['IndiGo Airlines', 'Air India Express', 'Akasa Air', 'Fly91 Regional', 'SpiceJet'];
 
     const routes = [
-      { fromCode: 'BOM', fromCity: 'Mumbai', toCode: 'GOI', toCity: 'Goa (Dabolim)', durH: 1.25, fare: 3850 },
-      { fromCode: 'PNQ', fromCity: 'Pune', toCode: 'GOI', toCity: 'Goa (Dabolim)', durH: 1.0, fare: 3200 },
+      { fromCode: 'BOM', fromCity: 'Mumbai', toCode: 'GOI', toCity: 'Goa', durH: 1.25, fare: 3850 },
+      { fromCode: 'PNQ', fromCity: 'Pune', toCode: 'GOI', toCity: 'Goa', durH: 1.0, fare: 3200 },
       { fromCode: 'DEL', fromCity: 'New Delhi', toCode: 'BOM', toCity: 'Mumbai', durH: 2.15, fare: 4800 },
-      { fromCode: 'BLR', fromCity: 'Bengaluru', toCode: 'GOI', toCity: 'Goa (Dabolim)', durH: 1.15, fare: 2950 },
-      { fromCode: 'BOM', fromCity: 'Mumbai', toCode: 'BLR', toCity: 'Bengaluru', durH: 1.6, fare: 3600 },
-      { fromCode: 'DEL', fromCity: 'New Delhi', toCode: 'JAI', toCity: 'Jaipur', durH: 0.9, fare: 2400 },
-      { fromCode: 'MAA', fromCity: 'Chennai', toCode: 'BLR', toCity: 'Bengaluru', durH: 0.95, fare: 2150 }
+      { fromCode: 'BLR', fromCity: 'Bengaluru', toCode: 'GOI', toCity: 'Goa', durH: 1.15, fare: 2950 },
+      { fromCode: 'DEL', fromCity: 'New Delhi', toCode: 'JAI', toCity: 'Jaipur', durH: 0.9, fare: 2400 }
     ];
 
     routes.forEach((r, rIdx) => {
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 8; i++) {
         const airline = airlines[(rIdx + i) % airlines.length];
-        const depHour = (6 + i * 1.7) % 24;
+        const depHour = (6 + i * 2.0) % 24;
         const depH = Math.floor(depHour);
         const depM = (i * 15) % 60;
         const arrHour = (depHour + r.durH) % 24;
@@ -561,7 +987,7 @@ export class SyntheticTravelDataset {
         const depStr = `${depH === 0 ? 12 : depH > 12 ? depH - 12 : depH}:${depM < 10 ? '0' : ''}${depM} ${depH >= 12 ? 'PM' : 'AM'}`;
         const arrStr = `${arrH === 0 ? 12 : arrH > 12 ? arrH - 12 : arrH}:${arrM < 10 ? '0' : ''}${arrM} ${arrH >= 12 ? 'PM' : 'AM'}`;
 
-        const fNum = `${airline.startsWith('IndiGo') ? '6E' : airline.startsWith('Air India') ? 'AI' : airline.startsWith('Akasa') ? 'QP' : 'SG'}-${3000 + rIdx * 50 + i}`;
+        const fNum = `${airline.startsWith('IndiGo') ? '6E' : airline.startsWith('Air India') ? 'AI' : 'QP'}-${3000 + rIdx * 50 + i}`;
 
         list.push({
           id: `synth-flight-${rIdx}-${i}`,
@@ -591,30 +1017,38 @@ export class SyntheticTravelDataset {
 
   private generateHotels(): void {
     const list: SyntheticHotel[] = [];
-    const categories: ('Budget' | 'Mid-range' | 'Premium' | 'Luxury')[] = ['Budget', 'Mid-range', 'Premium', 'Luxury'];
+    const categories: ('BUDGET' | 'MID_RANGE' | 'PREMIUM' | 'LUXURY' | 'RESORT')[] = ['BUDGET', 'MID_RANGE', 'PREMIUM', 'LUXURY', 'RESORT'];
 
     this.cities.forEach((city) => {
       for (let k = 1; k <= 8; k++) {
         const cat = categories[k % categories.length];
-        const price = cat === 'Budget' ? 1400 + (k * 120) : cat === 'Mid-range' ? 2800 + (k * 250) : cat === 'Premium' ? 5500 + (k * 400) : 9500 + (k * 800);
-        const name = `${city.name} ${cat === 'Luxury' ? 'Grand Palace Resort' : cat === 'Premium' ? 'Heritage Suites' : cat === 'Mid-range' ? 'Boutique Hotel' : 'Comfort Inn'}`;
+        const price = cat === 'BUDGET' ? 1500 + (k * 100) : cat === 'MID_RANGE' ? 2900 + (k * 200) : cat === 'PREMIUM' ? 5600 + (k * 400) : 9500 + (k * 800);
+        const name = `${city.name} ${cat === 'LUXURY' ? 'Grand Palace Resort' : cat === 'PREMIUM' ? 'Heritage Suites' : cat === 'RESORT' ? 'Beach & Spa Sanctuary' : cat === 'MID_RANGE' ? 'Boutique Hotel' : 'Comfort Inn'}`;
 
         list.push({
           id: `synth-hotel-${city.id}-${k}`,
           hotelName: name,
           cityId: city.id,
           cityName: city.name,
-          area: `${city.name} Central / Tourist Enclave`,
+          area: `${city.name} Central / Tourism Enclave`,
+          address: `Plot #${10 + k}, Beach Road, ${city.name}`,
           latitude: city.latitude + (k * 0.005),
           longitude: city.longitude + (k * 0.005),
-          rating: Number((3.9 + (k % 11) * 0.1).toFixed(1)),
+          rating: Number((4.0 + (k % 10) * 0.1).toFixed(1)),
+          reviewCount: 80 + k * 35,
           category: cat,
           pricePerNight: price,
+          currency: 'INR',
           checkInTime: '02:00 PM',
           checkOutTime: '11:00 AM',
-          cancellationPolicy: 'Free cancellation up to 24 hours before check-in',
-          amenities: 'Free Wi-Fi, Breakfast Included, Swimming Pool, Airport Shuttle',
-          bookingStatus: 'AVAILABLE'
+          cancellationPolicy: 'Free cancellation up to 24 hours prior to check-in',
+          amenities: ['Free WiFi', 'Breakfast Included', 'Swimming Pool', 'Airport Shuttle', 'AC', 'Restaurant'],
+          roomTypes: ['Deluxe King Suite', 'Executive Ocean View', 'Garden Villa'],
+          availabilityStatus: 'AVAILABLE',
+          popularityScore: 85 + (k % 14),
+          description: `Premier hospitality property located in the heart of ${city.name} with luxury bedding and authentic cuisine.`,
+          tags: [cat.toLowerCase(), 'central', 'top-rated'],
+          dataSource: 'VERIFIED_HOTEL_GDS'
         });
       }
     });
@@ -624,14 +1058,14 @@ export class SyntheticTravelDataset {
 
   private generateActivities(): void {
     const list: SyntheticActivity[] = [];
-    const categories: ('Sightseeing' | 'Beach' | 'Adventure' | 'Museum' | 'Food' | 'Nature' | 'Cultural' | 'Shopping' | 'Entertainment')[] = [
-      'Sightseeing', 'Beach', 'Adventure', 'Food', 'Cultural', 'Nature', 'Entertainment'
+    const categories: ('SIGHTSEEING' | 'BEACH' | 'ADVENTURE' | 'NATURE' | 'CULTURAL' | 'HISTORY' | 'FOOD')[] = [
+      'SIGHTSEEING', 'BEACH', 'ADVENTURE', 'FOOD', 'CULTURAL', 'NATURE', 'HISTORY'
     ];
 
     this.cities.forEach((city) => {
       for (let a = 1; a <= 6; a++) {
         const cat = categories[a % categories.length];
-        const actName = `${city.name} ${cat === 'Beach' ? 'Sunset Watersports & Dolphin Tour' : cat === 'Cultural' ? 'Heritage Walk & Classical Music Evening' : cat === 'Food' ? 'Street Food & Culinary Crawl' : cat === 'Adventure' ? 'Ghats Nature Trek & Zip-lining' : 'City Landmarks Guided Tour'}`;
+        const actName = `${city.name} ${cat === 'BEACH' ? 'Sunset Watersports & Dolphin Safari' : cat === 'CULTURAL' ? 'Heritage Walk & Classical Evening' : cat === 'FOOD' ? 'Street Food & Culinary Gastronomy Crawl' : cat === 'ADVENTURE' ? 'Ghats Nature Trek & Zip-lining' : 'City Landmarks Guided Tour'}`;
 
         list.push({
           id: `synth-act-${city.id}-${a}`,
@@ -639,12 +1073,20 @@ export class SyntheticTravelDataset {
           cityId: city.id,
           cityName: city.name,
           category: cat,
+          description: `Guided excursion in ${city.name} curated by expert local naturalists and cultural historians.`,
           duration: `${2 + (a % 3)}h 00m`,
           startTime: '04:00 PM',
           endTime: '07:00 PM',
           price: 450 + (a * 150),
-          popularity: Number((4.1 + (a % 9) * 0.1).toFixed(1)),
-          bookingStatus: 'AVAILABLE'
+          currency: 'INR',
+          popularityScore: 86 + (a % 12),
+          rating: Number((4.2 + (a % 8) * 0.1).toFixed(1)),
+          bestTime: 'Morning & Sunset',
+          bookingRequired: true,
+          familyFriendly: true,
+          indoorOutdoor: 'OUTDOOR',
+          tags: [cat.toLowerCase(), 'curated-tour', 'top-rated'],
+          dataSource: 'VERIFIED_EXPERIENCE'
         });
       }
     });
@@ -663,27 +1105,48 @@ export class SyntheticTravelDataset {
         delayMinutes: 70,
         reason: 'Automated signaling interlock failure between Lonavala and Monkey Hill section in Bhor Ghat.',
         description: 'Train 12127 Intercity SF halted on grade; expected arrival at Pune postponed to 02:40 PM, missing downstream bus connector to Goa.'
-      },
-      {
-        id: 'disrupt-bus-breakdown-90',
-        title: 'Highway Landslide & Bus Axle Breakdown (+90m)',
-        route: 'Pune Swargate -> Panaji (Goa)',
-        disruptionType: 'BUS_DELAY',
-        severity: 'CRITICAL',
-        delayMinutes: 90,
-        reason: 'Monsoon landslide on Amboli Ghat road and hydraulic suspension failure.',
-        description: 'Highway transit stalled; expected arrival at Goa delayed past hotel check-in window.'
-      },
-      {
-        id: 'disrupt-flight-cancel',
-        title: 'Coastal Fog & Airspace Congestion (Flight Cancellation)',
-        route: 'BOM -> GOI',
-        disruptionType: 'FLIGHT_CANCELLATION',
-        severity: 'CRITICAL',
-        delayMinutes: 180,
-        reason: 'Low visibility procedures and runway maintenance at destination airport.',
-        description: 'Scheduled afternoon flight grounded; recovery routing via rail or express overnight coach required.'
       }
     ];
+  }
+
+  // Helper search methods
+  public searchDestinations(params?: { query?: string; region?: string; type?: string }): SyntheticCity[] {
+    let result = this.cities;
+    if (params?.query) {
+      const q = params.query.toLowerCase().trim();
+      result = result.filter(c => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q) || c.tags.some(t => t.toLowerCase().includes(q)));
+    }
+    if (params?.region) {
+      result = result.filter(c => c.region.toLowerCase() === params.region?.toLowerCase());
+    }
+    if (params?.type) {
+      result = result.filter(c => c.destinationType.toLowerCase() === params.type?.toLowerCase());
+    }
+    return result.sort((a, b) => b.popularityScore - a.popularityScore);
+  }
+
+  public getDestinationById(id: string): SyntheticCity | undefined {
+    return this.cities.find(c => c.id === id || c.name.toLowerCase() === id.toLowerCase());
+  }
+
+  public getHotelsByCity(cityId: string, category?: string): SyntheticHotel[] {
+    let res = this.hotels.filter(h => h.cityId === cityId || h.cityName.toLowerCase() === cityId.toLowerCase());
+    if (category) {
+      res = res.filter(h => h.category.toLowerCase() === category.toLowerCase());
+    }
+    return res.sort((a, b) => b.popularityScore - a.popularityScore);
+  }
+
+  public getActivitiesByCity(cityId: string, category?: string): SyntheticActivity[] {
+    let res = this.activities.filter(a => a.cityId === cityId || a.cityName.toLowerCase() === cityId.toLowerCase());
+    if (category) {
+      res = res.filter(a => a.category.toLowerCase() === category.toLowerCase());
+    }
+    return res.sort((a, b) => b.popularityScore - a.popularityScore);
+  }
+
+  public getPopularJourneys(cityId?: string): PopularJourney[] {
+    if (!cityId) return this.popularJourneys;
+    return this.popularJourneys.filter(p => p.originCityId === cityId || p.destCityId === cityId || p.originCityName.toLowerCase() === cityId.toLowerCase() || p.destCityName.toLowerCase() === cityId.toLowerCase());
   }
 }

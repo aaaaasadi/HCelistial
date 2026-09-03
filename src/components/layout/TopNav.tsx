@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Compass,
   LayoutDashboard,
+  MapPin,
   Route,
   Activity,
   LifeBuoy,
@@ -49,6 +50,7 @@ export const TopNav: React.FC = () => {
 
   const navItems: { id: NavigationTab; label: string; icon: React.ElementType; badge?: string; badgeColor?: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'destinations', label: 'Explore', icon: MapPin },
     { id: 'journey', label: 'My Journey', icon: Route },
     { 
       id: 'monitor', 

@@ -5,6 +5,7 @@ import { NotificationController } from '../controllers/NotificationController';
 import { AIController } from '../controllers/AIController';
 import { HealthController } from '../controllers/HealthController';
 import { TransportController } from '../controllers/TransportController';
+import { DestinationController } from '../controllers/DestinationController';
 
 export const apiRouter = Router();
 
@@ -16,6 +17,15 @@ apiRouter.get('/trips/:tripId', TripController.getTrip);
 apiRouter.post('/trips/:tripId/demo/disruptions', TripController.simulateDisruption);
 apiRouter.post('/trips/:tripId/recovery-plans/:planId/select', TripController.selectRecoveryPlan);
 apiRouter.post('/trips/:tripId/reset', TripController.resetTrip);
+
+// Destinations, Popular Journeys, Hotels & Activities
+apiRouter.get('/destinations', DestinationController.getDestinations);
+apiRouter.get('/destinations/:id', DestinationController.getDestinationDetails);
+apiRouter.get('/destinations/:id/hotels', DestinationController.getDestinationHotels);
+apiRouter.get('/destinations/:id/activities', DestinationController.getDestinationActivities);
+apiRouter.get('/popular-journeys', DestinationController.getPopularJourneys);
+apiRouter.get('/hotels/search', DestinationController.searchHotels);
+apiRouter.get('/activities/search', DestinationController.searchActivities);
 
 // Transport Feeds, Alternative Search & Live Telemetry
 apiRouter.get('/transport/trains/search', TransportController.searchTrains);

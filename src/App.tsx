@@ -8,6 +8,7 @@ import { RecoveryCenterView } from './components/recovery/RecoveryCenterView';
 import { AITravelGuideView } from './components/ai/AITravelGuideView';
 import { PreferencesView } from './components/preferences/PreferencesView';
 import { NotificationsView } from './components/notifications/NotificationsView';
+import { DestinationExplorerView } from './components/destinations/DestinationExplorerView';
 
 const MainView: React.FC = () => {
   const { currentTab } = useDemo();
@@ -15,6 +16,8 @@ const MainView: React.FC = () => {
   switch (currentTab) {
     case 'dashboard':
       return <DashboardView />;
+    case 'destinations':
+      return <DestinationExplorerView />;
     case 'journey':
       return <MyJourneyView />;
     case 'monitor':

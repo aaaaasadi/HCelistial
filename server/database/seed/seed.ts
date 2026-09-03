@@ -25,6 +25,7 @@ export async function seedDatabase() {
 
     // Clear synthetic tables if they exist
     await client.query('DELETE FROM disruption_scenarios WHERE true;');
+    await client.query('DELETE FROM popular_journeys WHERE true;');
     await client.query('DELETE FROM synthetic_activities WHERE true;');
     await client.query('DELETE FROM synthetic_hotels WHERE true;');
     await client.query('DELETE FROM synthetic_flights WHERE true;');
@@ -36,10 +37,19 @@ export async function seedDatabase() {
     // 2. Seed Cities (120+ Cities)
     for (const city of dataset.cities) {
       await client.query(
-        `INSERT INTO cities (id, name, state, region, latitude, longitude, tier, is_tourist_hub)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;`,
-        [city.id, city.name, city.state, city.region, city.latitude, city.longitude, city.tier, city.isTouristHub]
+        `INSERT INTO cities (
+          id, name, state, country, region, latitude, longitude, destination_type,
+          tier, is_tourist_hub, description, short_description, popularity_score,
+          best_time_to_visit, average_stay_days, budget_level, tags, data_source
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;`,
+        [
+          city.id, city.name, city.state, city.country, city.region, city.latitude,
+          city.longitude, city.destinationType, city.tier, city.isTouristHub,
+          city.description, city.shortDescription, city.popularityScore,
+          city.bestTimeToVisit, city.averageStayDays, city.budgetLevel,
+          city.tags.join(', '), city.dataSource
+        ]
       );
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.cities.length} cities.`);
@@ -55,7 +65,26 @@ export async function seedDatabase() {
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.stations.length} stations and airports.`);
 
-    // 4. Seed Synthetic Trains (1,800+ Services)
+    // 4. Seed Popular Journeys (40+ Corridors)
+    for (const pj of dataset.popularJourneys) {
+      await client.query(
+        `INSERT INTO popular_journeys (
+          id, origin_city_id, origin_city_name, dest_city_id, dest_city_name,
+          title, description, popularity_score, estimated_duration, recommended_days,
+          travel_style, approximate_budget, available_transport_types, tags, featured, data_source
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;`,
+        [
+          pj.id, pj.originCityId, pj.originCityName, pj.destCityId, pj.destCityName,
+          pj.title, pj.description, pj.popularityScore, pj.estimatedDuration, pj.recommendedDays,
+          pj.travelStyle, pj.approximateBudget, pj.availableTransportTypes.join(', '),
+          pj.tags.join(', '), pj.featured, pj.dataSource
+        ]
+      );
+    }
+    console.log(`[PostgreSQL Seeder] Seeded ${dataset.popularJourneys.length} popular travel corridors.`);
+
+    // 5. Seed Synthetic Trains (1,800+ Services)
     for (const train of dataset.trains) {
       await client.query(
         `INSERT INTO synthetic_trains (
@@ -74,7 +103,7 @@ export async function seedDatabase() {
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.trains.length} synthetic train services.`);
 
-    // 5. Seed Synthetic Buses (1,800+ Services)
+    // 6. Seed Synthetic Buses (1,800+ Services)
     for (const bus of dataset.buses) {
       await client.query(
         `INSERT INTO synthetic_buses (
@@ -93,7 +122,7 @@ export async function seedDatabase() {
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.buses.length} synthetic bus services.`);
 
-    // 6. Seed Synthetic Flights (800+ Services)
+    // 7. Seed Synthetic Flights (800+ Services)
     for (const flt of dataset.flights) {
       await client.query(
         `INSERT INTO synthetic_flights (
@@ -112,41 +141,48 @@ export async function seedDatabase() {
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.flights.length} synthetic flight services.`);
 
-    // 7. Seed Synthetic Hotels (1,200+ Hotels)
+    // 8. Seed Synthetic Hotels (1,200+ Hotels)
     for (const hotel of dataset.hotels) {
       await client.query(
         `INSERT INTO synthetic_hotels (
-          id, hotel_name, city_id, city_name, area, latitude, longitude,
-          rating, category, price_per_night, check_in_time, check_out_time,
-          cancellation_policy, amenities, booking_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+          id, hotel_name, city_id, city_name, area, address, latitude, longitude,
+          rating, review_count, category, price_per_night, currency, check_in_time, check_out_time,
+          cancellation_policy, amenities, room_types, availability_status, popularity_score,
+          description, tags, data_source
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
         ON CONFLICT (id) DO UPDATE SET hotel_name = EXCLUDED.hotel_name;`,
         [
-          hotel.id, hotel.hotelName, hotel.cityId, hotel.cityName, hotel.area,
-          hotel.latitude, hotel.longitude, hotel.rating, hotel.category, hotel.pricePerNight,
-          hotel.checkInTime, hotel.checkOutTime, hotel.cancellationPolicy, hotel.amenities, hotel.bookingStatus
+          hotel.id, hotel.hotelName, hotel.cityId, hotel.cityName, hotel.area, hotel.address,
+          hotel.latitude, hotel.longitude, hotel.rating, hotel.reviewCount, hotel.category,
+          hotel.pricePerNight, hotel.currency, hotel.checkInTime, hotel.checkOutTime,
+          hotel.cancellationPolicy, hotel.amenities.join(', '), hotel.roomTypes.join(', '),
+          hotel.availabilityStatus, hotel.popularityScore, hotel.description,
+          hotel.tags.join(', '), hotel.dataSource
         ]
       );
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.hotels.length} synthetic hotels.`);
 
-    // 8. Seed Synthetic Activities (800+ Activities)
+    // 9. Seed Synthetic Activities (800+ Activities)
     for (const act of dataset.activities) {
       await client.query(
         `INSERT INTO synthetic_activities (
-          id, activity_name, city_id, city_name, category, duration,
-          start_time, end_time, price, popularity, booking_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          id, activity_name, city_id, city_name, category, description, duration,
+          start_time, end_time, price, currency, popularity_score, rating,
+          best_time, booking_required, family_friendly, indoor_outdoor, tags, data_source
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
         ON CONFLICT (id) DO UPDATE SET activity_name = EXCLUDED.activity_name;`,
         [
-          act.id, act.activityName, act.cityId, act.cityName, act.category, act.duration,
-          act.startTime, act.endTime, act.price, act.popularity, act.bookingStatus
+          act.id, act.activityName, act.cityId, act.cityName, act.category, act.description,
+          act.duration, act.startTime, act.endTime, act.price, act.currency,
+          act.popularityScore, act.rating, act.bestTime, act.bookingRequired,
+          act.familyFriendly, act.indoorOutdoor, act.tags.join(', '), act.dataSource
         ]
       );
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.activities.length} synthetic activities.`);
 
-    // 9. Seed Disruption Scenarios (100+ Scenarios)
+    // 10. Seed Disruption Scenarios (100+ Scenarios)
     for (const disc of dataset.disruptionScenarios) {
       await client.query(
         `INSERT INTO disruption_scenarios (
@@ -158,20 +194,22 @@ export async function seedDatabase() {
     }
     console.log(`[PostgreSQL Seeder] Seeded ${dataset.disruptionScenarios.length} disruption scenarios.`);
 
-    // 10. Insert Demo User (Arjun Mehta)
+    // 11. Insert Demo User (Arjun Mehta)
     await client.query(
       `INSERT INTO users (id, name, email, loyalty_tier)
-       VALUES ($1, $2, $3, $4);`,
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;`,
       ['TRV-88219', 'Arjun Mehta', 'arjun.mehta@example.com', 'Gold Priority']
     );
 
-    // 11. Insert User Preferences
+    // 12. Insert User Preferences
     await client.query(
       `INSERT INTO user_preferences (
         id, user_id, preferred_strategy, maximum_extra_budget,
         avoid_flights, avoid_overnight, avoid_long_transfers,
         prefer_direct, preserve_bookings, fewest_transfers, fastest, cheapest
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      ON CONFLICT (id) DO UPDATE SET preferred_strategy = EXCLUDED.preferred_strategy;`,
       [
         'pref-arjun',
         'TRV-88219',
@@ -179,7 +217,7 @@ export async function seedDatabase() {
         2000,
         false,
         false,
-        true,
+        false,
         false,
         true,
         false,
@@ -188,149 +226,28 @@ export async function seedDatabase() {
       ]
     );
 
-    // 12. Insert Hero Demo Trip (Mumbai -> Pune -> Goa)
+    // 13. Seed Hero Demo Trip
     await client.query(
-      `INSERT INTO trips (id, user_id, title, origin, destination, start_time, end_time, status, journey_health)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
-      [
-        'trip-mum-pune-goa',
-        'TRV-88219',
-        'Mumbai → Pune → Goa Weekend Expedition',
-        'Mumbai CSMT',
-        'Panaji, Goa',
-        'Today, 7:00 AM',
-        'Tomorrow, 12:00 PM',
-        'ON_TRACK',
-        95
-      ]
+      `INSERT INTO trips (
+        id, user_id, title, origin, destination, status, created_at, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;`,
+      ['TRIP-DEMO-001', 'TRV-88219', 'Mumbai to Goa Expedition', 'Mumbai CSMT', 'North Goa', 'ON_TRACK']
     );
 
-    // 13. Insert Trip Segments
-    const segments = [
-      {
-        id: 'seg-train-12127',
-        tripId: 'trip-mum-pune-goa',
-        seq: 1,
-        type: 'TRAIN',
-        title: 'Mumbai CSMT → Pune Jn (Deccan Express 12127)',
-        origin: 'Mumbai CSMT',
-        destination: 'Pune Junction',
-        schedDep: '7:00 AM',
-        schedArr: '1:30 PM',
-        expDep: '7:00 AM',
-        expArr: '1:30 PM',
-        status: 'ON_TIME',
-        provider: 'Indian Railways (IRCTC)',
-        serviceNumber: '12127',
-        bookingId: 'PNR-9482910',
-        platform: 'Platform 8, CSMT',
-        seat: 'Coach C2, Seat 44 (AC Chair Car)',
-        notes: 'Confirmed e-Ticket. Feeder link to Pune.'
-      },
-      {
-        id: 'seg-bus-pune-goa',
-        tripId: 'trip-mum-pune-goa',
-        seq: 2,
-        type: 'BUS',
-        title: 'Pune Swargate → Panaji, Goa (MSRTC Shivneri Volvo)',
-        origin: 'Pune Swargate Bus Terminal',
-        destination: 'Panaji (Goa)',
-        schedDep: '5:00 PM',
-        schedArr: '11:30 PM',
-        expDep: '5:00 PM',
-        expArr: '11:30 PM',
-        status: 'ON_TIME',
-        provider: 'MSRTC Shivneri Luxury',
-        serviceNumber: 'MH-12-RN-4821',
-        bookingId: 'BUS-892184',
-        platform: 'Bay 4, Swargate',
-        seat: 'Seat 14 (Window, Upper Deck)',
-        notes: 'Express highway transit via NH48.'
-      },
-      {
-        id: 'seg-hotel-goa',
-        tripId: 'trip-mum-pune-goa',
-        seq: 3,
-        type: 'HOTEL',
-        title: 'Check-in: Taj Cidade de Goa Heritage Resort',
-        origin: 'Vainguinim Beach',
-        destination: 'Panaji, Goa',
-        schedDep: 'Tomorrow, 2:00 PM',
-        schedArr: 'Day 3, 11:00 AM',
-        expDep: 'Tomorrow, 2:00 PM',
-        expArr: 'Day 3, 11:00 AM',
-        status: 'ON_TIME',
-        provider: 'Taj Hotels Resorts & Palaces',
-        serviceNumber: 'RES-99382',
-        bookingId: 'HTL-382910',
-        platform: 'Vainguinim Beach Road',
-        seat: 'Deluxe Sea View Suite (King Bed)',
-        notes: 'Non-refundable booking. Late check-in window ends at 11:30 PM.'
-      },
-      {
-        id: 'seg-activity-scuba',
-        tripId: 'trip-mum-pune-goa',
-        seq: 4,
-        type: 'ACTIVITY',
-        title: 'Grand Island Scuba Diving & Snorkeling Expedition',
-        origin: 'Sinquerim Jetty',
-        destination: 'Grand Island, Goa',
-        schedDep: 'Tomorrow, 8:30 AM',
-        schedArr: 'Tomorrow, 1:30 PM',
-        expDep: 'Tomorrow, 8:30 AM',
-        expArr: 'Tomorrow, 1:30 PM',
-        status: 'ON_TIME',
-        provider: 'Goa Aquatics & Marine Adventure Co.',
-        serviceNumber: 'ACT-DIVE-04',
-        bookingId: 'ACT-482918',
-        platform: 'Boat Slip #2, Sinquerim',
-        seat: 'Slot #4 (Includes Equipment & Dive Master)',
-        notes: 'PADI certified instructor session. Strict departure at 8:30 AM.'
-      }
-    ];
-
-    for (const s of segments) {
-      await client.query(
-        `INSERT INTO trip_segments (
-          id, trip_id, sequence, segment_type, title, origin, destination,
-          scheduled_departure, scheduled_arrival, expected_departure, expected_arrival,
-          status, provider, service_number, booking_id, platform_or_terminal,
-          seat_or_class, is_disrupted, delay_minutes, notes
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20);`,
-        [
-          s.id, s.tripId, s.seq, s.type, s.title, s.origin, s.destination,
-          s.schedDep, s.schedArr, s.expDep, s.expArr, s.status, s.provider,
-          s.serviceNumber, s.bookingId, s.platform, s.seat, false, 0, s.notes
-        ]
-      );
-    }
-
-    // 14. Insert Bookings
-    const bookings = [
-      { id: 'bkg-train-1', tripId: 'trip-mum-pune-goa', segmentId: 'seg-train-12127', ref: 'PNR-9482910', provider: 'Indian Railways (IRCTC)', type: 'TRAIN_TICKET', price: 240 },
-      { id: 'bkg-bus-1', tripId: 'trip-mum-pune-goa', segmentId: 'seg-bus-pune-goa', ref: 'BUS-892184', provider: 'MSRTC Shivneri', type: 'BUS_TICKET', price: 850 },
-      { id: 'bkg-hotel-1', tripId: 'trip-mum-pune-goa', segmentId: 'seg-hotel-goa', ref: 'HTL-382910', provider: 'Taj Cidade de Goa', type: 'HOTEL_RESERVATION', price: 9200 },
-      { id: 'bkg-act-1', tripId: 'trip-mum-pune-goa', segmentId: 'seg-activity-scuba', ref: 'ACT-482918', provider: 'Goa Aquatics Co.', type: 'TOUR_PASS', price: 3500 }
-    ];
-
-    for (const b of bookings) {
-      await client.query(
-        `INSERT INTO bookings (id, trip_id, segment_id, booking_reference, provider, booking_type, status, price, currency)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
-        [b.id, b.tripId, b.segmentId, b.ref, b.provider, b.type, 'CONFIRMED', b.price, 'INR']
-      );
-    }
+    console.log('[PostgreSQL Seeder] Successfully finished seeding complete relational travel dataset.');
   });
-
-  console.log('[PostgreSQL Seeder] ✅ Database seeded successfully with entire synthetic relational dataset!');
 }
 
-// Allow direct CLI execution: npx tsx server/database/seed/seed.ts
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+// Direct execution
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedDatabase()
-    .then(() => process.exit(0))
+    .then(() => {
+      console.log('[PostgreSQL Seeder] Completed successfully.');
+      process.exit(0);
+    })
     .catch((err) => {
-      console.error('[PostgreSQL Seeder] Seed failed:', err);
+      console.error('[PostgreSQL Seeder] Seeder error:', err);
       process.exit(1);
     });
 }

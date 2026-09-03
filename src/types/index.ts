@@ -280,6 +280,7 @@ export type DemoState =
 
 export type NavigationTab = 
   | 'dashboard'
+  | 'destinations'
   | 'journey'
   | 'monitor'
   | 'recovery'
