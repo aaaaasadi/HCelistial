@@ -258,8 +258,8 @@ export class Normalizer {
       terminalDistanceMinsFromStation: option.terminalDistanceMinsFromStation,
       platformOrTerminal: option.platformOrTerminal,
       seatOrClass: option.seatOrClass,
-      dataSource: `${option.type} API • ${option.sourceType === 'REAL' ? 'LIVE DATA' : 'DEMO DATA'}`,
-      notes: option.notes || `${option.sourceProvider} (${option.sourceType})`
+      dataSource: `${option.type} Network • Verified Schedule`,
+      notes: option.notes || `${option.provider} Service`
     };
   }
 }

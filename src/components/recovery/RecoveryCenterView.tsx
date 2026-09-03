@@ -120,7 +120,7 @@ export const RecoveryCenterView: React.FC = () => {
               className="px-4 py-2 rounded-xl bg-disruption hover:bg-disruption-dark text-white text-xs font-bold font-display shadow-glow-danger flex items-center gap-1.5 transition-all"
             >
               <Flame className="w-4 h-4 animate-bounce" />
-              <span>Trigger Disruption Demo</span>
+              <span>Simulate Disruption</span>
             </button>
           )}
 
@@ -210,7 +210,7 @@ export const RecoveryCenterView: React.FC = () => {
               className="px-4 py-2 rounded-xl bg-surface-high hover:bg-surface-highest border border-border text-xs text-text-secondary font-mono flex items-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Demo</span>
+              <span>Reset Journey</span>
             </button>
           </div>
         </div>

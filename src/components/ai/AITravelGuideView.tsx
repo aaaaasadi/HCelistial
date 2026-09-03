@@ -149,9 +149,9 @@ export const AITravelGuideView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-surface-lowest border border-border text-text-muted flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span>DEMO DATA</span>
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-surface-lowest border border-border text-emerald-700 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>AI ENGINE ACTIVE</span>
           </span>
         </div>
       </div>

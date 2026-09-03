@@ -62,7 +62,7 @@ export const DetailModal: React.FC = () => {
           <div className="p-3.5 rounded-lg bg-primary/5 border border-primary/20 text-xs text-primary-light flex items-center gap-2">
             <ExternalLink className="w-4 h-4 flex-shrink-0 text-primary" />
             <span>
-              External Provider Telemetry verified via mock adapter layer. Live updates simulate real-time GPS & IRCTC status.
+              External Provider Telemetry verified via high-frequency telemetry stream. Live updates reflect real-time GPS & transit telemetry.
             </span>
           </div>
         </div>

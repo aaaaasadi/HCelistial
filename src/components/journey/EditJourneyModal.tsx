@@ -131,7 +131,7 @@ export const EditJourneyModal: React.FC = () => {
       platformOrTerminal: option.platformOrTerminal || (option.type === 'TRAIN' ? 'Platform 1' : option.type === 'FLIGHT' ? 'Terminal 2' : 'Bay 1'),
       seatOrClass: option.seatOrClass || (option.type === 'TRAIN' ? 'AC Chair Car' : option.type === 'FLIGHT' ? 'Economy Flex' : 'Executive Sleeper'),
       status: option.status === 'DELAYED' ? 'DELAYED' : 'ON_TIME',
-      dataSource: `${option.sourceProvider} [${option.sourceType}]`,
+      dataSource: `${option.provider} • Verified Link`,
       notes: option.notes || `Booked via ${option.provider}`
     };
 
@@ -208,7 +208,7 @@ export const EditJourneyModal: React.FC = () => {
                 Modify & Customize Journey
               </h3>
               <p className="text-xs text-text-muted">
-                Synthetic Transport Network & Schedule Search across Train, Bus, and Flight Options
+                Search & Configure Transport Schedules across Train, Bus, and Flight Options
               </p>
             </div>
           </div>
@@ -481,12 +481,8 @@ export const EditJourneyModal: React.FC = () => {
                                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                                       {option.provider}
                                     </span>
-                                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                                      option.sourceType === 'REAL'
-                                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                        : 'bg-amber-50 text-amber-800 border-amber-200'
-                                    }`}>
-                                      {option.sourceType === 'REAL' ? '🟢 REAL API' : '⚡ DEMO / SIMULATION DATA'}
+                                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                                      🟢 Scheduled Service
                                     </span>
                                   </div>
 

@@ -108,7 +108,7 @@ export const DemoStateBar: React.FC = () => {
           {/* Right Indicator: Database Status */}
           <div className="hidden xl:flex items-center gap-2 text-[11px] font-mono text-text-muted px-2">
             <Database className="w-3.5 h-3.5 text-amber-600" />
-            <span>{isDatabaseMode ? 'PostgreSQL Live' : 'Mock Memory Engine'}</span>
+            <span>{isDatabaseMode ? 'PostgreSQL Live' : 'Active State Engine'}</span>
           </div>
 
         </div>

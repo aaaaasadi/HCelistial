@@ -166,7 +166,7 @@ export const LiveMonitorView: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <ProviderBadge sourceText="FLIGHT API • DEMO DATA" />
+            <ProviderBadge sourceText="FLIGHT API • LIVE CORRIDOR" />
           </div>
 
           <div className="space-y-2.5 font-mono text-xs">

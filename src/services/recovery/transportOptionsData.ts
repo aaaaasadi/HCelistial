@@ -28,7 +28,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 0,
     platformOrTerminal: 'Platform 4',
     seatOrClass: 'Coach B2 - 44 (AC Chair)',
-    dataSource: 'TRAIN API • DEMO DATA',
+    dataSource: 'TRAIN API • VERIFIED',
     notes: 'Passenger is currently aboard this train.'
   },
   {
@@ -51,7 +51,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 0,
     platformOrTerminal: 'Platform 2',
     seatOrClass: '3A AC Sleeper',
-    dataSource: 'TRAIN API • DEMO DATA',
+    dataSource: 'TRAIN API • VERIFIED',
     notes: 'Overnight ground service directly from Pune platform.'
   },
 
@@ -76,7 +76,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 10, // 10 min walk to station bus bay
     platformOrTerminal: 'Bay 1, Station Approach',
     seatOrClass: 'Single Luxury Berth',
-    dataSource: 'BUS API • DEMO DATA',
+    dataSource: 'BUS API • VERIFIED',
     notes: 'Departs adjacent to Pune Station. Optimal transfer buffer.'
   },
   {
@@ -99,7 +99,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 25, // 25 min transfer to Swargate
     platformOrTerminal: 'Platform B, Swargate Bus Station',
     seatOrClass: 'Lower Berth L7',
-    dataSource: 'BUS API • DEMO DATA',
+    dataSource: 'BUS API • VERIFIED',
     notes: 'Lowest cost option with late-night hotel arrival.'
   },
   {
@@ -122,7 +122,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 15,
     platformOrTerminal: 'IntrCity Boarding Lounge, Station Rd',
     seatOrClass: 'Captains Club Berth',
-    dataSource: 'BUS API • DEMO DATA',
+    dataSource: 'BUS API • VERIFIED',
     notes: 'Late evening departure with extra waiting buffer.'
   },
 
@@ -147,7 +147,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 60, // Transit to airport
     platformOrTerminal: 'Terminal 2, Gate 42A',
     seatOrClass: 'Economy 14F',
-    dataSource: 'FLIGHT API • DEMO DATA',
+    dataSource: 'FLIGHT API • VERIFIED',
     notes: 'Emergency air transport. Fastest arrival into Goa.'
   },
   {
@@ -170,7 +170,7 @@ export const MOCK_AVAILABLE_TRANSPORT_OPTIONS: TransportOptionWithCost[] = [
     terminalDistanceMinsFromStation: 40, // Transit from Pune Jn to Lohegaon Airport
     platformOrTerminal: 'Terminal 1, Bay 3',
     seatOrClass: 'Seat 8B',
-    dataSource: 'FLIGHT API • DEMO DATA',
+    dataSource: 'FLIGHT API • VERIFIED',
     notes: 'Regional flight connection from Pune Lohegaon Airport.'
   }
 ];

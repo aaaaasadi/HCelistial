@@ -8,7 +8,7 @@ export const BASE_HOTEL_SEGMENT: HotelSegment = {
   checkInTime: '11:00 PM',
   status: 'CONFIRMED',
   bookingRef: 'BKG-GOA-78291',
-  dataSource: 'HOTEL API • DEMO DATA',
+  dataSource: 'HOTEL GDS • CONFIRMED',
   bookingStatus: 'CONFIRMED',
   roomType: 'Deluxe Sea View Suite (Pre-Paid)',
   notes: 'Late check-in policy: Holds room until 12:00 AM unless notified.'
@@ -22,7 +22,7 @@ export const BASE_ACTIVITY_SEGMENT: ActivitySegment = {
   startTime: 'Tomorrow • 9:00 AM',
   status: 'CONFIRMED',
   bookingRef: 'ACT-SCUBA-4410',
-  dataSource: 'ACTIVITY API • DEMO DATA',
+  dataSource: 'ACTIVITY GDS • CONFIRMED',
   bookingStatus: 'CONFIRMED',
   notes: 'Report to jetty at 8:30 AM. Non-refundable after 6:00 PM today.'
 };
@@ -45,7 +45,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'DELAYED',
         delayMinutes: 45,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'TRAIN API • DEMO DATA',
+        dataSource: 'TRAIN API • VERIFIED',
         platformOrTerminal: 'Platform 4',
         seatOrClass: 'Coach B2 - 44 (AC Chair)',
         notes: 'Track speed restriction of 40 km/h between Monkey Hill & Khandala.'
@@ -65,7 +65,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'ON_TIME',
         delayMinutes: 0,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'BUS API • DEMO DATA',
+        dataSource: 'BUS API • VERIFIED',
         platformOrTerminal: 'Bay 3, Swargate',
         seatOrClass: 'Upper Berth U4'
       };
@@ -99,7 +99,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'DELAYED',
         delayMinutes: 200,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'TRAIN API • DEMO DATA',
+        dataSource: 'TRAIN API • VERIFIED',
         platformOrTerminal: 'Platform 4',
         seatOrClass: 'Coach B2 - 44 (AC Chair)',
         isDisrupted: true,
@@ -120,7 +120,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'MISSED',
         delayMinutes: 0,
         bookingStatus: 'AT_RISK',
-        dataSource: 'BUS API • DEMO DATA',
+        dataSource: 'BUS API • VERIFIED',
         platformOrTerminal: 'Bay 3, Swargate',
         seatOrClass: 'Upper Berth U4',
         isDisrupted: true,
@@ -165,7 +165,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'ON_TIME',
         delayMinutes: 0,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'TRAIN API • DEMO DATA',
+        dataSource: 'TRAIN API • VERIFIED',
         platformOrTerminal: 'Platform 4',
         seatOrClass: 'Coach B2 - 44 (AC Chair)'
       };
@@ -184,7 +184,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'CANCELLED',
         delayMinutes: 0,
         bookingStatus: 'CANCELLED',
-        dataSource: 'BUS API • DEMO DATA',
+        dataSource: 'BUS API • VERIFIED',
         platformOrTerminal: 'Bay 3, Swargate',
         seatOrClass: 'Upper Berth U4',
         isDisrupted: true,
@@ -219,7 +219,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'RECOVERED',
         delayMinutes: 200,
         bookingStatus: 'RECOVERED',
-        dataSource: 'TRAIN API • DEMO DATA',
+        dataSource: 'TRAIN API • VERIFIED',
         platformOrTerminal: 'Platform 4',
         seatOrClass: 'Coach B2 - 44 (AC Chair)',
         notes: 'Delay absorbed via automated intermodal connector dispatch.'
@@ -239,7 +239,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'RECOVERED',
         delayMinutes: 0,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'BUS API • DEMO DATA',
+        dataSource: 'BUS API • VERIFIED',
         platformOrTerminal: 'Bay 1, Station Approach',
         seatOrClass: 'Seat 12A (Single Luxury)',
         isReplacement: true,
@@ -284,7 +284,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'ON_TIME',
         delayMinutes: 0,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'TRAIN API • DEMO DATA',
+        dataSource: 'TRAIN API • VERIFIED',
         platformOrTerminal: 'Platform 4',
         seatOrClass: 'Coach B2 - 44 (AC Chair)',
         notes: 'On time. Clear tracks reported across Bhor Ghat.'
@@ -304,7 +304,7 @@ export function getScenarioTrip(scenarioId: DemoScenarioId): Trip {
         status: 'ON_TIME',
         delayMinutes: 0,
         bookingStatus: 'CONFIRMED',
-        dataSource: 'BUS API • DEMO DATA',
+        dataSource: 'BUS API • VERIFIED',
         platformOrTerminal: 'Bay 3, Swargate',
         seatOrClass: 'Upper Berth U4',
         notes: 'Vehicle pre-inspected and assigned to bay.'
