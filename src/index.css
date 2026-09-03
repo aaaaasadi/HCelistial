@@ -8,11 +8,12 @@
   }
   
   body {
-    background-color: #f7f3eb;
+    background-color: #f6f2ea;
     background-image: 
-      radial-gradient(ellipse at 50% 0%, rgba(217, 119, 6, 0.07) 0%, transparent 60%),
-      radial-gradient(ellipse at 100% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 0% 50%, rgba(225, 29, 72, 0.03) 0%, transparent 40%);
+      radial-gradient(ellipse at 50% 0%, rgba(217, 119, 6, 0.09) 0%, transparent 60%),
+      radial-gradient(ellipse at 100% 100%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 0% 50%, rgba(225, 29, 72, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 30%);
     background-attachment: fixed;
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
@@ -42,48 +43,99 @@
 /* Luxury Warm Glassmorphism & Card Utilities */
 .hud-card {
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(180, 140, 90, 0.16);
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -5px rgba(120, 80, 40, 0.06), 0 2px 6px -1px rgba(120, 80, 40, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(180, 140, 90, 0.18);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(120, 80, 40, 0.06), 0 2px 8px -1px rgba(120, 80, 40, 0.03);
 }
 
 .hud-card-interactive {
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(180, 140, 90, 0.16);
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -5px rgba(120, 80, 40, 0.06), 0 2px 6px -1px rgba(120, 80, 40, 0.03);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(180, 140, 90, 0.18);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(120, 80, 40, 0.06), 0 2px 8px -1px rgba(120, 80, 40, 0.03);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hud-card-interactive:hover {
   background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(217, 119, 6, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px -5px rgba(120, 80, 40, 0.12), 0 0 20px -3px rgba(217, 119, 6, 0.1);
+  border-color: rgba(217, 119, 6, 0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -8px rgba(120, 80, 40, 0.14), 0 0 24px -4px rgba(217, 119, 6, 0.15);
 }
 
 .hud-card-disrupted {
-  background: rgba(255, 241, 242, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(244, 63, 94, 0.3);
-  border-left: 5px solid #e11d48;
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -5px rgba(225, 29, 72, 0.1);
+  background: linear-gradient(135deg, rgba(255, 241, 242, 0.96) 0%, rgba(255, 228, 230, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-left: 6px solid #e11d48;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 35px -5px rgba(225, 29, 72, 0.14), 0 0 20px -3px rgba(225, 29, 72, 0.1);
 }
 
 .hud-card-recovered {
-  background: rgba(240, 253, 244, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-left: 5px solid #059669;
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -5px rgba(5, 150, 105, 0.1);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.96) 0%, rgba(220, 252, 231, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-left: 6px solid #059669;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 35px -5px rgba(5, 150, 105, 0.14), 0 0 20px -3px rgba(5, 150, 105, 0.1);
+}
+
+/* Radar pulse animation for active live transit node */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(217, 119, 6, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+  }
+}
+
+.animate-radar {
+  animation: radar-pulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+@keyframes radar-pulse-danger {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 14px rgba(225, 29, 72, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
+  }
+}
+
+.animate-radar-danger {
+  animation: radar-pulse-danger 1.5s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* Route track animation */
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.route-dash-animated {
+  stroke-dasharray: 6, 6;
+  animation: dash-flow 1.2s linear infinite;
 }
 
 /* Hide scrollbar utility */

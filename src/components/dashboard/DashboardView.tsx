@@ -20,6 +20,8 @@ import { ProviderBadge } from '../common/ProviderBadge';
 import { RiskIndicator } from '../common/RiskIndicator';
 import { TransportSegment, HotelSegment, ActivitySegment } from '../../types';
 
+import { RouteVisualizer } from '../journey/RouteVisualizer';
+
 export const DashboardView: React.FC = () => {
   const {
     currentTrip,
@@ -119,6 +121,9 @@ export const DashboardView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Interactive Animated Route Visualizer */}
+      <RouteVisualizer />
 
       {/* Main Journey Health Card */}
       <div
