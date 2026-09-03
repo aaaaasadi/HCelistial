@@ -8,62 +8,87 @@
   }
   
   body {
-    background-color: #0c0e12;
+    background-color: #0e0d0b;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(0, 102, 255, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(239, 68, 68, 0.04) 0px, transparent 50%);
+      radial-gradient(ellipse at 50% -10%, rgba(226, 190, 114, 0.09) 0%, transparent 65%),
+      radial-gradient(ellipse at 100% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 0% 50%, rgba(244, 63, 94, 0.03) 0%, transparent 45%);
     background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
   }
 }
 
-/* Custom crisp scrollbars */
+/* Custom warm crisp scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #111317;
+  background: #12100e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2d34;
+  background: #2a251f;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #424656;
+  background: #423b32;
 }
 
-/* Utility classes for HUD borders & glowing */
+/* Luxury Warm Glassmorphism utilities */
 .hud-card {
-  background: rgba(30, 32, 35, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(30, 27, 24, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 238, 220, 0.09);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.35);
 }
 
 .hud-card-interactive {
-  background: rgba(30, 32, 35, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(30, 27, 24, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 238, 220, 0.09);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hud-card-interactive:hover {
-  border-color: rgba(0, 102, 255, 0.35);
-  transform: translateY(-1px);
+  border-color: rgba(226, 190, 114, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.45), 0 0 20px -3px rgba(226, 190, 114, 0.12);
 }
 
 .hud-card-disrupted {
-  background: rgba(35, 20, 23, 0.75);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  border-left: 4px solid #ef4444;
+  background: rgba(38, 20, 24, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-left: 5px solid #f43f5e;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -5px rgba(244, 63, 94, 0.15);
 }
 
 .hud-card-recovered {
-  background: rgba(18, 32, 25, 0.75);
-  backdrop-filter: blur(16px);
+  background: rgba(18, 33, 27, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(16, 185, 129, 0.35);
-  border-left: 4px solid #10b981;
+  border-left: 5px solid #10b981;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.15);
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
