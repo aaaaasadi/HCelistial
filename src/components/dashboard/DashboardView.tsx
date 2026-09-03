@@ -20,7 +20,6 @@ import { StatusBadge } from '../common/StatusBadge';
 import { ProviderBadge } from '../common/ProviderBadge';
 import { RiskIndicator } from '../common/RiskIndicator';
 import { TransportSegment, HotelSegment, ActivitySegment } from '../../types';
-import { EclipseButton } from '@/components/ui/eclipse-button';
 
 import { RouteVisualizer } from '../journey/RouteVisualizer';
 
@@ -248,14 +247,13 @@ export const DashboardView: React.FC = () => {
               </p>
             </div>
           </div>
-          <EclipseButton
-            variant="destructive"
-            size="sm"
-            text="Analyze & Recover"
+          <button
             onClick={() => setCurrentTab('recovery')}
-            leftIcon={<LifeBuoy className="w-3.5 h-3.5" />}
-            className="w-full sm:w-auto flex-shrink-0 shadow-glow-danger"
-          />
+            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-display flex items-center justify-center gap-2 shadow-glow-danger transition-colors flex-shrink-0"
+          >
+            <LifeBuoy className="w-3.5 h-3.5" />
+            <span>Analyze & Recover</span>
+          </button>
         </div>
       )}
 
@@ -567,28 +565,28 @@ export const DashboardView: React.FC = () => {
             Real-time multi-modal routing, verified facts AI assistant, and interactive components.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
-          <EclipseButton
-            variant="outline"
-            size="sm"
-            text="AI Guide"
-            leftIcon={<Bot className="w-3.5 h-3.5" />}
+        <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-start md:justify-end">
+          <button
             onClick={() => setCurrentTab('ai')}
-          />
-          <EclipseButton
-            variant="ghost"
-            size="sm"
-            text="Explore"
-            leftIcon={<Compass className="w-3.5 h-3.5" />}
+            className="px-4 py-2 rounded-full bg-surface-lowest hover:bg-white text-text-primary border border-border text-xs font-semibold flex items-center gap-1.5 transition-all hover:scale-105"
+          >
+            <Bot className="w-3.5 h-3.5 text-amber-600" />
+            <span>AI Guide</span>
+          </button>
+          <button
             onClick={() => setCurrentTab('destinations')}
-          />
-          <EclipseButton
-            variant="primary"
-            size="sm"
-            text="Recovery Center"
-            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            className="px-4 py-2 rounded-full bg-surface-lowest hover:bg-white text-text-primary border border-border text-xs font-semibold flex items-center gap-1.5 transition-all hover:scale-105"
+          >
+            <Compass className="w-3.5 h-3.5 text-amber-600" />
+            <span>Explore</span>
+          </button>
+          <button
             onClick={() => setCurrentTab('recovery')}
-          />
+            className="px-4 py-2 rounded-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/20 transition-all hover:scale-105"
+          >
+            <span>Recovery Center</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </div>
