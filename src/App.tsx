@@ -9,6 +9,7 @@ import { AITravelGuideView } from './components/ai/AITravelGuideView';
 import { PreferencesView } from './components/preferences/PreferencesView';
 import { NotificationsView } from './components/notifications/NotificationsView';
 import { DestinationExplorerView } from './components/destinations/DestinationExplorerView';
+import EclipseButtonVariants from './components/ui/demo';
 
 const MainView: React.FC = () => {
   const { currentTab } = useDemo();
@@ -33,6 +34,8 @@ const MainView: React.FC = () => {
             return <PreferencesView />;
           case 'notifications':
             return <NotificationsView />;
+          case 'components':
+            return <EclipseButtonVariants />;
           default:
             return <DashboardView />;
         }

@@ -286,7 +286,9 @@ export type NavigationTab =
   | 'recovery'
   | 'ai'
   | 'preferences'
-  | 'notifications';
+  | 'notifications'
+  | 'components';
+
 
 // ==========================================
 // PHASE 5: AI TRAVEL GUIDE & INTELLIGENT LAYER
