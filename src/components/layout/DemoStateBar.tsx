@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import {
   Flame,
   RotateCcw,
@@ -77,7 +78,7 @@ export const DemoStateBar: React.FC = () => {
               <span className="hidden md:inline font-bold">Scenario:</span>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 relative">
               {scenarios.map((sc) => {
                 const isActive = activeScenario === sc.id;
                 return (
@@ -91,13 +92,20 @@ export const DemoStateBar: React.FC = () => {
                         setCurrentTab('journey');
                       }
                     }}
-                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap select-none ${
+                    className={`relative px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 whitespace-nowrap select-none z-10 ${
                       isActive
-                        ? 'bg-amber-600 text-white font-bold shadow-md shadow-amber-600/20'
-                        : 'text-text-muted hover:text-text-primary hover:bg-white'
+                        ? 'text-white font-bold'
+                        : 'text-text-muted hover:text-text-primary hover:bg-white/60'
                     }`}
                     title={sc.tag}
                   >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeScenarioPill"
+                        className="absolute inset-0 rounded-full bg-amber-600 shadow-sm shadow-amber-600/30 -z-10"
+                        transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                      />
+                    )}
                     <span>{sc.label}</span>
                   </button>
                 );

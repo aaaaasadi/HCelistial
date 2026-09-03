@@ -7,7 +7,14 @@ import { EditJourneyModal } from '../journey/EditJourneyModal';
 
 export const AppShell: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-surface text-text-primary selection:bg-amber-500/20 selection:text-amber-900">
+    <div className="min-h-screen flex flex-col bg-surface text-text-primary selection:bg-amber-500/20 selection:text-amber-900 relative">
+      {/* Subtle Ambient Background Glowing Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-[120px] animate-pulse-subtle" />
+        <div className="absolute top-[40%] right-[-5%] w-[450px] h-[450px] bg-blue-400/8 rounded-full blur-[140px] animate-float" />
+        <div className="absolute bottom-[-10%] left-[5%] w-[400px] h-[400px] bg-rose-400/6 rounded-full blur-[130px]" />
+      </div>
+
       {/* Floating Top Header Navigation */}
       <TopNav />
 

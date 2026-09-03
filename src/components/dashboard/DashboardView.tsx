@@ -12,13 +12,15 @@ import {
   Bot,
   ChevronRight,
   Info,
-  AlertTriangle
+  AlertTriangle,
+  Compass
 } from 'lucide-react';
 import { useDemo } from '../../context/DemoContext';
 import { StatusBadge } from '../common/StatusBadge';
 import { ProviderBadge } from '../common/ProviderBadge';
 import { RiskIndicator } from '../common/RiskIndicator';
 import { TransportSegment, HotelSegment, ActivitySegment } from '../../types';
+import { EclipseButton } from '@/components/ui/eclipse-button';
 
 import { RouteVisualizer } from '../journey/RouteVisualizer';
 
@@ -246,13 +248,14 @@ export const DashboardView: React.FC = () => {
               </p>
             </div>
           </div>
-          <button
+          <EclipseButton
+            variant="destructive"
+            size="sm"
+            text="Analyze & Recover"
             onClick={() => setCurrentTab('recovery')}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-display flex items-center justify-center gap-2 shadow-glow-danger transition-colors flex-shrink-0"
-          >
-            <LifeBuoy className="w-3.5 h-3.5" />
-            <span>Analyze & Recover</span>
-          </button>
+            leftIcon={<LifeBuoy className="w-3.5 h-3.5" />}
+            className="w-full sm:w-auto flex-shrink-0 shadow-glow-danger"
+          />
         </div>
       )}
 
@@ -550,6 +553,42 @@ export const DashboardView: React.FC = () => {
 
             return null;
           })}
+        </div>
+      </div>
+
+      {/* Interactive Quick Launch Action Bar */}
+      <div className="bg-white/90 backdrop-blur-xl border border-amber-900/10 rounded-3xl p-6 shadow-glass-warm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 className="text-sm font-bold font-display text-text-primary flex items-center gap-2">
+            <Bot className="w-4 h-4 text-amber-600" />
+            <span>Autonomous Intelligence & Tools</span>
+          </h4>
+          <p className="text-xs text-text-muted mt-0.5">
+            Real-time multi-modal routing, verified facts AI assistant, and interactive components.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
+          <EclipseButton
+            variant="outline"
+            size="sm"
+            text="AI Guide"
+            leftIcon={<Bot className="w-3.5 h-3.5" />}
+            onClick={() => setCurrentTab('ai')}
+          />
+          <EclipseButton
+            variant="ghost"
+            size="sm"
+            text="Explore"
+            leftIcon={<Compass className="w-3.5 h-3.5" />}
+            onClick={() => setCurrentTab('destinations')}
+          />
+          <EclipseButton
+            variant="primary"
+            size="sm"
+            text="UI Components"
+            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            onClick={() => setCurrentTab('components')}
+          />
         </div>
       </div>
     </div>

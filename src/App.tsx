@@ -8,6 +8,7 @@ import { RecoveryCenterView } from './components/recovery/RecoveryCenterView';
 import { AITravelGuideView } from './components/ai/AITravelGuideView';
 import { PreferencesView } from './components/preferences/PreferencesView';
 import { NotificationsView } from './components/notifications/NotificationsView';
+import { AnimatePresence, motion } from 'motion/react';
 import { DestinationExplorerView } from './components/destinations/DestinationExplorerView';
 import EclipseButtonVariants from './components/ui/demo';
 
@@ -15,32 +16,41 @@ const MainView: React.FC = () => {
   const { currentTab } = useDemo();
 
   return (
-    <div key={currentTab} className="view-transition">
-      {(() => {
-        switch (currentTab) {
-          case 'dashboard':
-            return <DashboardView />;
-          case 'destinations':
-            return <DestinationExplorerView />;
-          case 'journey':
-            return <MyJourneyView />;
-          case 'monitor':
-            return <LiveMonitorView />;
-          case 'recovery':
-            return <RecoveryCenterView />;
-          case 'ai':
-            return <AITravelGuideView />;
-          case 'preferences':
-            return <PreferencesView />;
-          case 'notifications':
-            return <NotificationsView />;
-          case 'components':
-            return <EclipseButtonVariants />;
-          default:
-            return <DashboardView />;
-        }
-      })()}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div 
+        key={currentTab}
+        initial={{ opacity: 0, y: 12, scale: 0.995 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -8, scale: 0.995 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full"
+      >
+        {(() => {
+          switch (currentTab) {
+            case 'dashboard':
+              return <DashboardView />;
+            case 'destinations':
+              return <DestinationExplorerView />;
+            case 'journey':
+              return <MyJourneyView />;
+            case 'monitor':
+              return <LiveMonitorView />;
+            case 'recovery':
+              return <RecoveryCenterView />;
+            case 'ai':
+              return <AITravelGuideView />;
+            case 'preferences':
+              return <PreferencesView />;
+            case 'notifications':
+              return <NotificationsView />;
+            case 'components':
+              return <EclipseButtonVariants />;
+            default:
+              return <DashboardView />;
+          }
+        })()}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'motion/react';
 import {
   Compass,
   LayoutDashboard,
@@ -114,8 +115,8 @@ export const TopNav: React.FC = () => {
               </div>
             </div>
 
-            {/* Desktop Navigation Pills */}
-            <nav className="hidden lg:flex items-center gap-1.5 bg-surface-lowest/80 p-1.5 rounded-full border border-border/60 shadow-inner">
+            {/* Desktop Navigation Pills with Smooth Sliding Active Indicator */}
+            <nav className="hidden lg:flex items-center gap-1.5 bg-surface-lowest/90 p-1.5 rounded-full border border-border/60 shadow-inner relative">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentTab === item.id;
@@ -123,12 +124,19 @@ export const TopNav: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => setCurrentTab(item.id)}
-                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-display select-none transition-all duration-300 ${
+                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-display select-none transition-colors duration-200 z-10 ${
                       isActive
-                        ? 'text-white font-bold nav-pill-active shadow-md'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/90 nav-pill-inactive'
+                        ? 'text-white font-bold'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-white/60'
                     }`}
                   >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavTabPill"
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-600 via-amber-600 to-amber-700 shadow-md shadow-amber-600/30 -z-10"
+                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                      />
+                    )}
                     <Icon className={`w-3.5 h-3.5 transition-transform duration-200 ${isActive ? 'text-white stroke-[2.5] scale-110' : 'text-text-muted'}`} />
                     <span>{item.label}</span>
                     {item.badge && (
