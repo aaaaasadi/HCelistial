@@ -1,7 +1,8 @@
 /**
  * Large Structured Relational Synthetic Travel Dataset Generator
- * Generates 120+ Indian Destinations, 40+ Popular Corridor Journeys, 300+ Stations/Airports,
- * 1,800+ Trains, 1,800+ Buses, 800+ Flights, 1,200+ Hotels, 800+ Activities, and 100+ Disruptions.
+ * Generates 120+ Indian Destinations across all Regions & States,
+ * 40+ Popular Multimodal Corridors, 300+ Stations/Airports,
+ * 1,800+ Trains, 1,800+ Buses, 800+ Flights, 1,200+ Hotels, 840+ Activities, and 100+ Disruptions.
  */
 
 export interface SyntheticCity {
@@ -179,9 +180,9 @@ export interface SyntheticDisruptionScenario {
   description: string;
 }
 
-// 1. MASTER CITIES (120+ Rich Destinations)
+// 1. MASTER 120+ INDIAN DESTINATIONS
 export const MASTER_CITIES: SyntheticCity[] = [
-  // Maharashtra & Goa Corridor
+  // --- WEST REGION (Maharashtra, Goa, Gujarat) ---
   {
     id: 'city-mumbai',
     name: 'Mumbai',
@@ -193,7 +194,7 @@ export const MASTER_CITIES: SyntheticCity[] = [
     destinationType: 'METRO',
     tier: 'Tier-1',
     isTouristHub: true,
-    description: 'India’s financial capital, vibrant coastal metropolis famous for Marine Drive, Gateway of India, Bollywood, and iconic heritage railway architectures.',
+    description: 'India’s vibrant coastal financial capital famous for Marine Drive, Gateway of India, Bollywood, and iconic heritage railway architecture.',
     shortDescription: 'The bustling City of Dreams with rich colonial heritage & Arabian Sea coastline.',
     popularityScore: 98,
     bestTimeToVisit: 'October to March',
@@ -213,7 +214,7 @@ export const MASTER_CITIES: SyntheticCity[] = [
     destinationType: 'CULTURAL',
     tier: 'Tier-1',
     isTouristHub: true,
-    description: 'The Oxford of the East and cultural capital of Maharashtra, nestled in the Western Ghats with historic Maratha forts, green hills, and thriving food culture.',
+    description: 'Cultural capital of Maharashtra nestled in the Western Ghats with historic Maratha forts, green hill lookouts, and thriving food culture.',
     shortDescription: 'Cultural hub of Maharashtra with historic forts, palaces, and hill gateways.',
     popularityScore: 91,
     bestTimeToVisit: 'July to February',
@@ -342,8 +343,228 @@ export const MASTER_CITIES: SyntheticCity[] = [
     tags: ['Hill Station', 'Strawberries', 'Viewpoints', 'Boating', 'Cool Climate'],
     dataSource: 'VERIFIED_DESTINATION'
   },
+  {
+    id: 'city-lonavala',
+    name: 'Lonavala & Khandala',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 18.7557,
+    longitude: 73.4091,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Popular weekend Sahyadri hill getaway with misty waterfalls, Bhushi Dam, ancient Karla & Bhaja Buddhist rock-cut caves, and chikki confectioneries.',
+    shortDescription: 'Sahyadri misty cliffs, rock caves, waterfalls, and scenic express highways.',
+    popularityScore: 90,
+    bestTimeToVisit: 'July to February',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹6,000 / day)',
+    tags: ['Waterfalls', 'Rock Caves', 'Monsoon Retreat', 'Chikki', 'Sahyadri'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-alibaug',
+    name: 'Alibaug',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 18.6414,
+    longitude: 72.8722,
+    destinationType: 'BEACH',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Coastal seaside escape near Mumbai reachable by Ro-Ro ferry, famous for Kolaba Sea Fort, clean sandy beaches (Varsoli, Nagaon), and luxury beach villas.',
+    shortDescription: 'Coastal beach haven with historic sea forts and luxury villa stays.',
+    popularityScore: 88,
+    bestTimeToVisit: 'October to May',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹8,000 / day)',
+    tags: ['Beach', 'Sea Fort', 'Ro-Ro Ferry', 'Watersports', 'Seafood'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-shirdi',
+    name: 'Shirdi',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 19.7645,
+    longitude: 74.4762,
+    destinationType: 'PILGRIMAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Major pilgrimage destination visited by millions worldwide to seek blessings at the sacred Sai Baba Samadhi Mandir.',
+    shortDescription: 'World-renowned holy shrine and spiritual center of Sai Baba.',
+    popularityScore: 91,
+    bestTimeToVisit: 'All Year',
+    averageStayDays: 1,
+    budgetLevel: 'Budget to Moderate (₹1,500 - ₹4,000 / day)',
+    tags: ['Sai Baba', 'Pilgrimage', 'Spiritual', 'Temple Shrine'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-aurangabad',
+    name: 'Chhatrapati Sambhajinagar (Aurangabad)',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 19.8762,
+    longitude: 75.3433,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Tourism capital of Maharashtra, gateway to UNESCO World Heritage Ajanta & Ellora rock-cut cave monuments and Bibi Ka Maqbara.',
+    shortDescription: 'Gateway to the awe-inspiring Ajanta and Ellora rock-cut cave temples.',
+    popularityScore: 93,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹2,500 - ₹5,500 / day)',
+    tags: ['Ajanta Ellora', 'UNESCO Heritage', 'Rock-cut Caves', 'Bibi Ka Maqbara', 'Himroo'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-kolhapur',
+    name: 'Kolhapur',
+    state: 'Maharashtra',
+    country: 'India',
+    region: 'West',
+    latitude: 16.7050,
+    longitude: 74.2433,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Historic princely city celebrated for Mahalakshmi Temple, Panhala Fort, handcrafted Kolhapuri leather chappals, and spicy Kolhapuri cuisine.',
+    shortDescription: 'Royal city of Mahalakshmi Temple, Maratha fortresses, and artisanal crafts.',
+    popularityScore: 87,
+    bestTimeToVisit: 'September to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,000 / day)',
+    tags: ['Mahalakshmi Temple', 'Panhala Fort', 'Leather Crafts', 'Spicy Cuisine'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-ahmedabad',
+    name: 'Ahmedabad',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 23.0225,
+    longitude: 72.5714,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'India’s first UNESCO World Heritage City, home to Sabarmati Ashram, intricately carved stepwells (Adalaj), and bustling textile markets.',
+    shortDescription: 'Historic UNESCO heritage city with Sabarmati Ashram and intricate stepwells.',
+    popularityScore: 92,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,800 - ₹6,000 / day)',
+    tags: ['UNESCO Heritage', 'Sabarmati Ashram', 'Stepwells', 'Textiles', 'Street Food'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-surat',
+    name: 'Surat',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 21.1702,
+    longitude: 72.8311,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: false,
+    description: 'The Diamond and Silk City of India on the Tapi River, famous for gourmet Gujarati street food (Surti Locho, Ghari) and vibrant textile bazaars.',
+    shortDescription: 'World diamond hub and culinary capital celebrated for silk & textiles.',
+    popularityScore: 86,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹5,000 / day)',
+    tags: ['Diamond Hub', 'Silk City', 'Surti Street Food', 'Tapi Riverfront'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-vadodara',
+    name: 'Vadodara (Baroda)',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 22.3072,
+    longitude: 73.1812,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Cultural capital of Gujarat, famous for the magnificent Lukshmi Villas Palace (4x the size of Buckingham Palace) and gateway to the Statue of Unity.',
+    shortDescription: 'Palatial city of Lukshmi Villas and premier gateway to the Statue of Unity.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹5,500 / day)',
+    tags: ['Lukshmi Villas Palace', 'Statue of Unity', 'Art & Culture', 'Garba'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-kutch',
+    name: 'Kutch / Rann of Kutch',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 23.7337,
+    longitude: 69.8597,
+    destinationType: 'CULTURAL',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Vast white salt desert shining beneath moonlight, host to the vibrant Rann Utsav festival, nomadic embroidery, and Kutch artisan villages.',
+    shortDescription: 'Mesmerizing white salt desert expanse, Rann Utsav cultural extravaganza, and handicrafts.',
+    popularityScore: 95,
+    bestTimeToVisit: 'November to February (Rann Utsav)',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,500 - ₹10,000 / day)',
+    tags: ['White Desert', 'Rann Utsav', 'Handicrafts', 'Full Moon Desert', 'Culture'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-dwarka',
+    name: 'Dwarka',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 22.2442,
+    longitude: 68.9685,
+    destinationType: 'PILGRIMAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Ancient kingdom of Lord Krishna, one of the sacred Char Dham pilgrimage sites overlooking the Arabian Sea, featuring the Dwarkadhish Temple.',
+    shortDescription: 'Sacred Char Dham oceanfront temple city of Lord Krishna.',
+    popularityScore: 90,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
+    tags: ['Char Dham', 'Dwarkadhish', 'Arabian Sea', 'Pilgrimage', 'Scuba Archeology'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-gir',
+    name: 'Sasan Gir (Gir National Park)',
+    state: 'Gujarat',
+    country: 'India',
+    region: 'West',
+    latitude: 21.1243,
+    longitude: 70.8242,
+    destinationType: 'WILDLIFE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'The only natural sanctuary in the world where Asiatic Lions roam free in dry deciduous savannah forests.',
+    shortDescription: 'Exclusive worldwide home of the majestic Asiatic Lion in open savannah.',
+    popularityScore: 92,
+    bestTimeToVisit: 'December to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate to Luxury (₹3,500 - ₹9,000 / day)',
+    tags: ['Asiatic Lions', 'Wildlife Safari', 'National Park', 'Eco-Tourism'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
 
-  // North & Golden Triangle
+  // --- NORTH REGION (Delhi, UP, Rajasthan, Uttarakhand, Himachal, Punjab, J&K, Ladakh) ---
   {
     id: 'city-delhi',
     name: 'New Delhi',
@@ -355,7 +576,7 @@ export const MASTER_CITIES: SyntheticCity[] = [
     destinationType: 'METRO',
     tier: 'Tier-1',
     isTouristHub: true,
-    description: 'National capital city blending grand Mughal monuments (Red Fort, Qutub Minar, Humayun’s Tomb), Lutyens boulevards, and world-class street gastronomy.',
+    description: 'National capital city blending monumental Mughal heritage (Red Fort, Qutub Minar, Humayun’s Tomb), Lutyens boulevards, and vibrant street gastronomy.',
     shortDescription: 'Historic national capital with centuries of monumental architecture and culinary culture.',
     popularityScore: 97,
     bestTimeToVisit: 'October to March',
@@ -425,6 +646,66 @@ export const MASTER_CITIES: SyntheticCity[] = [
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
+    id: 'city-jodhpur',
+    name: 'Jodhpur',
+    state: 'Rajasthan',
+    country: 'India',
+    region: 'North',
+    latitude: 26.2389,
+    longitude: 73.0243,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The Blue City crowned by the colossal Mehrangarh Fort overlooking cobalt-painted Brahmin houses and Umaid Bhawan Palace.',
+    shortDescription: 'The Blue City beneath the impregnable clifftop fortress of Mehrangarh.',
+    popularityScore: 93,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate to Luxury (₹2,800 - ₹8,000 / day)',
+    tags: ['Blue City', 'Mehrangarh Fort', 'Umaid Bhawan', 'Marwar Heritage'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-jaisalmer',
+    name: 'Jaisalmer',
+    state: 'Rajasthan',
+    country: 'India',
+    region: 'North',
+    latitude: 26.9157,
+    longitude: 70.9083,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'The Golden City rising from the Thar Desert with a living sandstone fort, intricately carved Jain havelis, and desert camel safaris across Sam sand dunes.',
+    shortDescription: 'The Golden City of yellow sandstone forts and Thar Desert camel dunes.',
+    popularityScore: 94,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹9,000 / day)',
+    tags: ['Golden Fort', 'Thar Desert', 'Camel Safari', 'Havelis', 'Desert Camp'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-pushkar',
+    name: 'Pushkar',
+    state: 'Rajasthan',
+    country: 'India',
+    region: 'North',
+    latitude: 26.4897,
+    longitude: 74.5511,
+    destinationType: 'CULTURAL',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Sacred lake town enveloped by desert hills, famous for the rare Brahma Temple and the colorful international Pushkar Camel Fair.',
+    shortDescription: 'Sacred lakeside desert town host to the world-famous Pushkar Camel Fair.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹1,800 - ₹4,500 / day)',
+    tags: ['Brahma Temple', 'Pushkar Lake', 'Camel Fair', 'Desert Spiritual'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
     id: 'city-varanasi',
     name: 'Varanasi',
     state: 'Uttar Pradesh',
@@ -445,6 +726,26 @@ export const MASTER_CITIES: SyntheticCity[] = [
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
+    id: 'city-lucknow',
+    name: 'Lucknow',
+    state: 'Uttar Pradesh',
+    country: 'India',
+    region: 'North',
+    latitude: 26.8467,
+    longitude: 80.9462,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'City of Nawabs celebrated for courtly etiquette (Tehzeeb), Bara Imambara labyrinth, delicate Chikankari embroidery, and legendary Awadhi kebabs.',
+    shortDescription: 'Nawabi city of courtly culture, Bara Imambara, Chikankari, and Awadhi culinary royal cuisine.',
+    popularityScore: 91,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹5,500 / day)',
+    tags: ['Nawabs', 'Bara Imambara', 'Chikankari', 'Awadhi Food', 'Tunday Kebabs'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
     id: 'city-rishikesh',
     name: 'Rishikesh',
     state: 'Uttarakhand',
@@ -455,13 +756,33 @@ export const MASTER_CITIES: SyntheticCity[] = [
     destinationType: 'ADVENTURE',
     tier: 'Tier-3',
     isTouristHub: true,
-    description: 'Yoga Capital of the World and adventure hub on the Himalayan foothills, famous for white-water river rafting, suspension bridges, and yoga ashrams.',
+    description: 'Yoga Capital of the World on the Himalayan foothills, famous for white-water river rafting, suspension bridges, Beatles Ashram, and yoga retreats.',
     shortDescription: 'Himalayan yoga sanctuary and thrilling white-water river rafting capital.',
     popularityScore: 93,
     bestTimeToVisit: 'September to May',
     averageStayDays: 3,
     budgetLevel: 'Budget to Moderate (₹2,000 - ₹5,500 / day)',
     tags: ['Yoga', 'White-Water Rafting', 'Himalayas', 'Ganga', 'Ashrams'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-haridwar',
+    name: 'Haridwar',
+    state: 'Uttarakhand',
+    country: 'India',
+    region: 'North',
+    latitude: 29.9457,
+    longitude: 78.1642,
+    destinationType: 'PILGRIMAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Gateway to the Gods where the holy River Ganga enters the Indo-Gangetic plains, famed for Har Ki Pauri evening aarti ceremony.',
+    shortDescription: 'Sacred river gateway where the holy Ganga enters the northern plains.',
+    popularityScore: 90,
+    bestTimeToVisit: 'October to April',
+    averageStayDays: 2,
+    budgetLevel: 'Budget (₹1,500 - ₹3,500 / day)',
+    tags: ['Har Ki Pauri', 'Ganga Aarti', 'Pilgrimage', 'Spiritual Gateway'],
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
@@ -475,7 +796,7 @@ export const MASTER_CITIES: SyntheticCity[] = [
     destinationType: 'HILL_STATION',
     tier: 'Tier-3',
     isTouristHub: true,
-    description: 'High-altitude Himalayan resort town surrounded by snow-capped peaks, pine forests, Solang Valley adventure sports, and gateway to Rohtang Pass.',
+    description: 'High-altitude Himalayan resort town surrounded by snow-capped peaks, pine forests, Solang Valley adventure sports, and gateway to Rohtang Pass & Ladakh.',
     shortDescription: 'Snow-capped Himalayan valley town with alpine meadows and river adventures.',
     popularityScore: 94,
     bestTimeToVisit: 'October to June',
@@ -484,8 +805,108 @@ export const MASTER_CITIES: SyntheticCity[] = [
     tags: ['Snow Peaks', 'Solang Valley', 'Trekking', 'Paragliding', 'Himalayas'],
     dataSource: 'VERIFIED_DESTINATION'
   },
+  {
+    id: 'city-shimla',
+    name: 'Shimla',
+    state: 'Himachal Pradesh',
+    country: 'India',
+    region: 'North',
+    latitude: 31.1048,
+    longitude: 77.1734,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Former summer capital of British India, famous for The Mall, Christ Church, pine-covered slopes, and the UNESCO Kalka-Shimla Toy Train.',
+    shortDescription: 'Queen of the Hills with colonial Mall Road and heritage toy train rail.',
+    popularityScore: 92,
+    bestTimeToVisit: 'March to June & December to February (Snow)',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹7,500 / day)',
+    tags: ['Mall Road', 'Toy Train', 'Colonial Heritage', 'Pine Forests', 'Snow'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-amritsar',
+    name: 'Amritsar',
+    state: 'Punjab',
+    country: 'India',
+    region: 'North',
+    latitude: 31.6340,
+    longitude: 74.8723,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Spiritual and cultural heart of Sikhism, home to the resplendent Golden Temple (Harmandir Sahib), Wagah Border beating retreat, and rich Punjabi gastronomy.',
+    shortDescription: 'Spiritual Golden Temple shrine, Wagah Border ceremony, and iconic Punjabi culinary heritage.',
+    popularityScore: 95,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
+    tags: ['Golden Temple', 'Wagah Border', 'Langar', 'Punjabi Food', 'Amritsari Kulcha'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-srinagar',
+    name: 'Srinagar',
+    state: 'Jammu and Kashmir',
+    country: 'India',
+    region: 'North',
+    latitude: 34.0837,
+    longitude: 74.7973,
+    destinationType: 'NATURE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Paradise on Earth famed for tranquil Shikara rides on Dal Lake, Mughal Gardens (Shalimar, Nishat), ornate wooden houseboats, and snow-dusted mountains.',
+    shortDescription: 'Dal Lake shikara rides, floating gardens, and historic Mughal pleasure gardens.',
+    popularityScore: 96,
+    bestTimeToVisit: 'April to October',
+    averageStayDays: 4,
+    budgetLevel: 'Moderate to Luxury (₹3,500 - ₹9,500 / day)',
+    tags: ['Dal Lake', 'Shikara', 'Houseboats', 'Mughal Gardens', 'Pashmina'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-gulmarg',
+    name: 'Gulmarg',
+    state: 'Jammu and Kashmir',
+    country: 'India',
+    region: 'North',
+    latitude: 34.0484,
+    longitude: 74.3805,
+    destinationType: 'ADVENTURE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Meadow of Flowers and Asia’s premier skiing destination, boasting the world’s second highest operating cable car (Gulmarg Gondola at 13,780 ft).',
+    shortDescription: 'Premier ski resort and high-altitude gondola soaring over Apharwat Peak.',
+    popularityScore: 95,
+    bestTimeToVisit: 'December to March (Skiing) / May to September',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹4,000 - ₹12,000 / day)',
+    tags: ['Gulmarg Gondola', 'Skiing', 'Snowboarding', 'Meadow of Flowers', 'Himalayas'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-leh',
+    name: 'Leh Ladakh',
+    state: 'Ladakh',
+    country: 'India',
+    region: 'North',
+    latitude: 34.1526,
+    longitude: 77.5771,
+    destinationType: 'ADVENTURE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Land of High Mountain Passes, Tibetan Buddhist monasteries (Thiksey, Hemis), azure Pangong Tso Lake, and dramatic cold desert landscapes.',
+    shortDescription: 'High-altitude cold desert plateau, Tibetan monasteries, and Pangong Lake.',
+    popularityScore: 97,
+    bestTimeToVisit: 'May to September',
+    averageStayDays: 5,
+    budgetLevel: 'Moderate to Premium (₹3,500 - ₹9,000 / day)',
+    tags: ['High Passes', 'Pangong Lake', 'Monasteries', 'Cold Desert', 'Motorbiking'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
 
-  // South & Kerala
+  // --- SOUTH REGION (Karnataka, Kerala, Tamil Nadu, Telangana, Andhra, Pondicherry) ---
   {
     id: 'city-bengaluru',
     name: 'Bengaluru',
@@ -524,6 +945,46 @@ export const MASTER_CITIES: SyntheticCity[] = [
     averageStayDays: 2,
     budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
     tags: ['Mysore Palace', 'Silk & Sandalwood', 'Chamundi Hill', 'Heritage'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-hampi',
+    name: 'Hampi',
+    state: 'Karnataka',
+    country: 'India',
+    region: 'South',
+    latitude: 15.3350,
+    longitude: 76.4600,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'UNESCO World Heritage open-air museum of Vijayanagara Empire ruins, boulder-strewn landscapes, stone chariot at Vijaya Vittala, and Virupaksha Temple.',
+    shortDescription: 'Spectacular boulder-strewn ruined capital of the Vijayanagara Empire.',
+    popularityScore: 95,
+    bestTimeToVisit: 'October to February',
+    averageStayDays: 3,
+    budgetLevel: 'Budget to Moderate (₹1,800 - ₹4,500 / day)',
+    tags: ['UNESCO Heritage', 'Stone Chariot', 'Ruins', 'Tungabhadra', 'Bouldering'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-coorg',
+    name: 'Coorg (Madikeri)',
+    state: 'Karnataka',
+    country: 'India',
+    region: 'South',
+    latitude: 12.4244,
+    longitude: 75.7382,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Scotland of India, blanketed with aromatic coffee plantations, spice estates, Abbey Falls, and misty Brahmagiri mountains.',
+    shortDescription: 'Misty coffee plantation paradise with lush waterfalls and Kodava culture.',
+    popularityScore: 92,
+    bestTimeToVisit: 'October to April',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate to Luxury (₹3,000 - ₹8,000 / day)',
+    tags: ['Coffee Plantations', 'Spices', 'Waterfalls', 'Trekking', 'Kodava Cuisine'],
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
@@ -567,6 +1028,26 @@ export const MASTER_CITIES: SyntheticCity[] = [
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
+    id: 'city-alleppey',
+    name: 'Alleppey (Alappuzha)',
+    state: 'Kerala',
+    country: 'India',
+    region: 'South',
+    latitude: 9.4981,
+    longitude: 76.3388,
+    destinationType: 'NATURE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Venice of the East, famed for traditional Kettuvallam luxury houseboat cruises through serene palm-fringed backwater canals and paddy fields.',
+    shortDescription: 'Houseboat cruises along palm-fringed backwaters and tranquil lagoons.',
+    popularityScore: 96,
+    bestTimeToVisit: 'September to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate to Luxury (₹3,500 - ₹12,000 / day)',
+    tags: ['Houseboat', 'Backwaters', 'Vembanad Lake', 'Ayurveda', 'Coir'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
     id: 'city-chennai',
     name: 'Chennai',
     state: 'Tamil Nadu',
@@ -584,6 +1065,26 @@ export const MASTER_CITIES: SyntheticCity[] = [
     averageStayDays: 2,
     budgetLevel: 'Moderate (₹2,800 - ₹6,000 / day)',
     tags: ['Marina Beach', 'Dravidian Temples', 'Carnatic Music', 'Coastal Cuisine'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-ooty',
+    name: 'Ooty (Udhagamandalam)',
+    state: 'Tamil Nadu',
+    country: 'India',
+    region: 'South',
+    latitude: 11.4102,
+    longitude: 76.6950,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Queen of the Nilgiri Hills, featuring lush botanical gardens, Ooty Lake, eucalyptus groves, and the UNESCO Nilgiri Mountain Toy Train.',
+    shortDescription: 'Nilgiri blue mountain retreat with botanical gardens and heritage toy train.',
+    popularityScore: 92,
+    bestTimeToVisit: 'October to June',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹2,800 - ₹7,000 / day)',
+    tags: ['Nilgiris', 'Toy Train', 'Tea Estates', 'Botanical Gardens', 'Cool Climate'],
     dataSource: 'VERIFIED_DESTINATION'
   },
   {
@@ -625,6 +1126,190 @@ export const MASTER_CITIES: SyntheticCity[] = [
     budgetLevel: 'Moderate to Premium (₹3,000 - ₹7,000 / day)',
     tags: ['Charminar', 'Hyderabadi Biryani', 'Golconda Fort', 'Pearls', 'HITEC City'],
     dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-visakhapatnam',
+    name: 'Visakhapatnam (Vizag)',
+    state: 'Andhra Pradesh',
+    country: 'India',
+    region: 'South',
+    latitude: 17.6868,
+    longitude: 83.2185,
+    destinationType: 'COASTAL',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The Jewel of the East Coast, where the Eastern Ghats meet the Bay of Bengal, featuring RK Beach, submarine museum, and scenic Borra Caves.',
+    shortDescription: 'Coastal city where lush Eastern Ghats meet Bay of Bengal beaches.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,200 - ₹5,000 / day)',
+    tags: ['Eastern Ghats', 'RK Beach', 'Submarine Museum', 'Araku Valley'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+
+  // --- EAST & NORTHEAST REGION (West Bengal, Odisha, Sikkim, Assam, Meghalaya) ---
+  {
+    id: 'city-kolkata',
+    name: 'Kolkata',
+    state: 'West Bengal',
+    country: 'India',
+    region: 'East',
+    latitude: 22.5726,
+    longitude: 88.3639,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'City of Joy and cultural capital, famed for the grand Victoria Memorial, iconic Howrah Bridge over Hooghly River, tramways, and Bengali sweets (Rosogolla, Mishti Doi).',
+    shortDescription: 'City of Joy with grand colonial landmarks, Howrah Bridge, and rich literary arts.',
+    popularityScore: 94,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 3,
+    budgetLevel: 'Budget to Moderate (₹2,200 - ₹5,500 / day)',
+    tags: ['Victoria Memorial', 'Howrah Bridge', 'Durga Puja', 'Literature', 'Bengali Sweets'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-darjeeling',
+    name: 'Darjeeling',
+    state: 'West Bengal',
+    country: 'India',
+    region: 'East',
+    latitude: 27.0410,
+    longitude: 88.2663,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Queen of the Hills in the Himalayas, famed for Tiger Hill sunrise over Mount Kanchenjunga (world’s 3rd highest peak), world-renowned orthodox Darjeeling tea, and the UNESCO Toy Train.',
+    shortDescription: 'Himalayan sunrise viewpoints over Mt. Kanchenjunga and lush tea estates.',
+    popularityScore: 95,
+    bestTimeToVisit: 'March to May & October to December',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹2,800 - ₹7,000 / day)',
+    tags: ['Kanchenjunga', 'Darjeeling Tea', 'UNESCO Toy Train', 'Tiger Hill', 'Himalayas'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-bhubaneswar',
+    name: 'Bhubaneswar',
+    state: 'Odisha',
+    country: 'India',
+    region: 'East',
+    latitude: 20.2961,
+    longitude: 85.8245,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'Temple City of India, home to over 500 ancient Kalinga stone temples including Lingaraj and Mukteshvara, and gateway to Puri and Konark Sun Temple.',
+    shortDescription: 'Ancient Kalinga temple architecture hub and gateway to the golden triangle of Odisha.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
+    tags: ['Temple City', 'Lingaraj', 'Kalinga Architecture', 'Mukteshvara'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-gangtok',
+    name: 'Gangtok',
+    state: 'Sikkim',
+    country: 'India',
+    region: 'NorthEast',
+    latitude: 27.3389,
+    longitude: 88.6065,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Capital of Sikkim set along steep mountain ridges with panoramic views of Kanchenjunga, Rumtek Buddhist Monastery, and gateway to Nathu La Pass & Tsomgo Lake.',
+    shortDescription: 'Pristine Eastern Himalayan kingdom capital with mountain monasteries and high-altitude lakes.',
+    popularityScore: 93,
+    bestTimeToVisit: 'March to June & September to November',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹3,000 - ₹7,500 / day)',
+    tags: ['Rumtek Monastery', 'Tsomgo Lake', 'Nathu La', 'Kanchenjunga', 'Clean City'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-shillong',
+    name: 'Shillong',
+    state: 'Meghalaya',
+    country: 'India',
+    region: 'NorthEast',
+    latitude: 25.5788,
+    longitude: 91.8933,
+    destinationType: 'HILL_STATION',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'Scotland of the East, known for rolling green pine hills, living root bridges, crystal clear Umngot River at Dawki, and thriving rock music culture.',
+    shortDescription: 'Pine-clad hill paradise, living root bridges, and clear river waters of Meghalaya.',
+    popularityScore: 92,
+    bestTimeToVisit: 'September to May',
+    averageStayDays: 3,
+    budgetLevel: 'Moderate (₹2,800 - ₹6,500 / day)',
+    tags: ['Living Root Bridges', 'Dawki River', 'Waterfalls', 'Rock Music', 'Pine Hills'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+
+  // --- CENTRAL REGION (Madhya Pradesh & Chhattisgarh) ---
+  {
+    id: 'city-indore',
+    name: 'Indore',
+    state: 'Madhya Pradesh',
+    country: 'India',
+    region: 'Central',
+    latitude: 22.7196,
+    longitude: 75.8577,
+    destinationType: 'METRO',
+    tier: 'Tier-1',
+    isTouristHub: true,
+    description: 'India’s cleanest city for multiple consecutive years, street food capital at Sarafa Night Market and Chappan Dukan, and historic Rajwada Palace.',
+    shortDescription: 'India’s cleanest smart city and legendary midnight street food capital.',
+    popularityScore: 91,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,200 - ₹5,000 / day)',
+    tags: ['Cleanest City', 'Sarafa Night Market', 'Rajwada', 'Poha Jalebi', 'Central Hub'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-bhopal',
+    name: 'Bhopal',
+    state: 'Madhya Pradesh',
+    country: 'India',
+    region: 'Central',
+    latitude: 23.2599,
+    longitude: 77.4126,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-2',
+    isTouristHub: true,
+    description: 'The City of Lakes in central India, famous for Upper Lake, Taj-ul-Masajid, and UNESCO World Heritage sites at Sanchi Stupa and Bhimbetka Rock Shelters.',
+    shortDescription: 'Lakeside heritage city and gateway to ancient Sanchi and Bhimbetka UNESCO sites.',
+    popularityScore: 89,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Budget to Moderate (₹2,000 - ₹4,500 / day)',
+    tags: ['City of Lakes', 'Sanchi Stupa', 'Bhimbetka', 'Taj-ul-Masajid'],
+    dataSource: 'VERIFIED_DESTINATION'
+  },
+  {
+    id: 'city-khajuraho',
+    name: 'Khajuraho',
+    state: 'Madhya Pradesh',
+    country: 'India',
+    region: 'Central',
+    latitude: 24.8318,
+    longitude: 79.9199,
+    destinationType: 'HERITAGE',
+    tier: 'Tier-3',
+    isTouristHub: true,
+    description: 'UNESCO World Heritage site celebrated for its stunning medieval Hindu and Jain temples with intricate Nagara-style stone sculptures.',
+    shortDescription: 'World-famous UNESCO temple complex of exquisite medieval stone sculpting.',
+    popularityScore: 93,
+    bestTimeToVisit: 'October to March',
+    averageStayDays: 2,
+    budgetLevel: 'Moderate (₹2,500 - ₹6,000 / day)',
+    tags: ['UNESCO Heritage', 'Kandariya Mahadeva', 'Nagara Sculptures', 'Medieval Temples'],
+    dataSource: 'VERIFIED_DESTINATION'
   }
 ];
 
@@ -637,7 +1322,7 @@ export const POPULAR_JOURNEYS: PopularJourney[] = [
     destCityId: 'city-goa',
     destCityName: 'Goa',
     title: 'Mumbai → Goa Coastal Odyssey',
-    description: 'The ultimate Indian beach getaway route. Travel via scenic Konkan Railway through coastal waterfalls and tunnels, luxury sleeper coach, or swift 1h non-stop flight.',
+    description: 'The ultimate Indian beach corridor. Travel via scenic Konkan Railway through coastal waterfalls and tunnels, luxury sleeper coach, or swift 1h non-stop flight.',
     popularityScore: 99,
     estimatedDuration: '1h 15m (Flight) / 8h 30m (Train) / 12h (Bus)',
     recommendedDays: 4,
@@ -1020,10 +1705,10 @@ export class SyntheticTravelDataset {
     const categories: ('BUDGET' | 'MID_RANGE' | 'PREMIUM' | 'LUXURY' | 'RESORT')[] = ['BUDGET', 'MID_RANGE', 'PREMIUM', 'LUXURY', 'RESORT'];
 
     this.cities.forEach((city) => {
-      for (let k = 1; k <= 8; k++) {
+      for (let k = 1; k <= 10; k++) {
         const cat = categories[k % categories.length];
-        const price = cat === 'BUDGET' ? 1500 + (k * 100) : cat === 'MID_RANGE' ? 2900 + (k * 200) : cat === 'PREMIUM' ? 5600 + (k * 400) : 9500 + (k * 800);
-        const name = `${city.name} ${cat === 'LUXURY' ? 'Grand Palace Resort' : cat === 'PREMIUM' ? 'Heritage Suites' : cat === 'RESORT' ? 'Beach & Spa Sanctuary' : cat === 'MID_RANGE' ? 'Boutique Hotel' : 'Comfort Inn'}`;
+        const price = cat === 'BUDGET' ? 1400 + (k * 110) : cat === 'MID_RANGE' ? 2800 + (k * 220) : cat === 'PREMIUM' ? 5400 + (k * 450) : 9200 + (k * 850);
+        const name = `${city.name} ${cat === 'LUXURY' ? 'Grand Palace & Spa' : cat === 'PREMIUM' ? 'Heritage Suites' : cat === 'RESORT' ? 'Beach & Valley Sanctuary' : cat === 'MID_RANGE' ? 'Boutique Hotel' : 'Comfort Inn'}`;
 
         list.push({
           id: `synth-hotel-${city.id}-${k}`,
@@ -1031,23 +1716,23 @@ export class SyntheticTravelDataset {
           cityId: city.id,
           cityName: city.name,
           area: `${city.name} Central / Tourism Enclave`,
-          address: `Plot #${10 + k}, Beach Road, ${city.name}`,
-          latitude: city.latitude + (k * 0.005),
-          longitude: city.longitude + (k * 0.005),
+          address: `Plot #${10 + k}, Heritage Road, ${city.name}, ${city.state}`,
+          latitude: Number((city.latitude + (k * 0.004)).toFixed(4)),
+          longitude: Number((city.longitude + (k * 0.004)).toFixed(4)),
           rating: Number((4.0 + (k % 10) * 0.1).toFixed(1)),
-          reviewCount: 80 + k * 35,
+          reviewCount: 90 + k * 45,
           category: cat,
           pricePerNight: price,
           currency: 'INR',
           checkInTime: '02:00 PM',
           checkOutTime: '11:00 AM',
           cancellationPolicy: 'Free cancellation up to 24 hours prior to check-in',
-          amenities: ['Free WiFi', 'Breakfast Included', 'Swimming Pool', 'Airport Shuttle', 'AC', 'Restaurant'],
-          roomTypes: ['Deluxe King Suite', 'Executive Ocean View', 'Garden Villa'],
+          amenities: ['Free WiFi', 'Breakfast Included', 'Swimming Pool', 'Airport Shuttle', 'Air Conditioning', 'Multi-cuisine Restaurant'],
+          roomTypes: ['Deluxe King Suite', 'Executive Ocean/Valley View', 'Garden Pool Villa'],
           availabilityStatus: 'AVAILABLE',
-          popularityScore: 85 + (k % 14),
-          description: `Premier hospitality property located in the heart of ${city.name} with luxury bedding and authentic cuisine.`,
-          tags: [cat.toLowerCase(), 'central', 'top-rated'],
+          popularityScore: 85 + (k % 15),
+          description: `Premier hospitality property located in the heart of ${city.name} with luxury bedding and authentic regional cuisine.`,
+          tags: [cat.toLowerCase(), 'central', 'top-rated', city.name.toLowerCase()],
           dataSource: 'VERIFIED_HOTEL_GDS'
         });
       }
@@ -1063,9 +1748,9 @@ export class SyntheticTravelDataset {
     ];
 
     this.cities.forEach((city) => {
-      for (let a = 1; a <= 6; a++) {
+      for (let a = 1; a <= 7; a++) {
         const cat = categories[a % categories.length];
-        const actName = `${city.name} ${cat === 'BEACH' ? 'Sunset Watersports & Dolphin Safari' : cat === 'CULTURAL' ? 'Heritage Walk & Classical Evening' : cat === 'FOOD' ? 'Street Food & Culinary Gastronomy Crawl' : cat === 'ADVENTURE' ? 'Ghats Nature Trek & Zip-lining' : 'City Landmarks Guided Tour'}`;
+        const actName = `${city.name} ${cat === 'BEACH' ? 'Sunset Watersports & Dolphin Safari' : cat === 'CULTURAL' ? 'Heritage Walk & Classical Evening' : cat === 'FOOD' ? 'Street Food & Culinary Gastronomy Crawl' : cat === 'ADVENTURE' ? 'Ghats Nature Trek & Zip-lining' : cat === 'HISTORY' ? 'Ancient Forts & Monuments Excursion' : 'City Landmarks Guided Tour'}`;
 
         list.push({
           id: `synth-act-${city.id}-${a}`,
@@ -1073,19 +1758,19 @@ export class SyntheticTravelDataset {
           cityId: city.id,
           cityName: city.name,
           category: cat,
-          description: `Guided excursion in ${city.name} curated by expert local naturalists and cultural historians.`,
+          description: `Curated excursion in ${city.name} led by certified local naturalists and cultural historians.`,
           duration: `${2 + (a % 3)}h 00m`,
           startTime: '04:00 PM',
           endTime: '07:00 PM',
           price: 450 + (a * 150),
           currency: 'INR',
-          popularityScore: 86 + (a % 12),
+          popularityScore: 86 + (a % 14),
           rating: Number((4.2 + (a % 8) * 0.1).toFixed(1)),
           bestTime: 'Morning & Sunset',
           bookingRequired: true,
           familyFriendly: true,
           indoorOutdoor: 'OUTDOOR',
-          tags: [cat.toLowerCase(), 'curated-tour', 'top-rated'],
+          tags: [cat.toLowerCase(), 'curated-tour', 'top-rated', city.name.toLowerCase()],
           dataSource: 'VERIFIED_EXPERIENCE'
         });
       }
@@ -1130,7 +1815,8 @@ export class SyntheticTravelDataset {
   }
 
   public getHotelsByCity(cityId: string, category?: string): SyntheticHotel[] {
-    let res = this.hotels.filter(h => h.cityId === cityId || h.cityName.toLowerCase() === cityId.toLowerCase());
+    const q = cityId.toLowerCase().trim();
+    let res = this.hotels.filter(h => h.cityId === cityId || h.cityName.toLowerCase() === q || h.cityName.toLowerCase().includes(q) || h.area.toLowerCase().includes(q));
     if (category) {
       res = res.filter(h => h.category.toLowerCase() === category.toLowerCase());
     }
@@ -1138,7 +1824,8 @@ export class SyntheticTravelDataset {
   }
 
   public getActivitiesByCity(cityId: string, category?: string): SyntheticActivity[] {
-    let res = this.activities.filter(a => a.cityId === cityId || a.cityName.toLowerCase() === cityId.toLowerCase());
+    const q = cityId.toLowerCase().trim();
+    let res = this.activities.filter(a => a.cityId === cityId || a.cityName.toLowerCase() === q || a.cityName.toLowerCase().includes(q));
     if (category) {
       res = res.filter(a => a.category.toLowerCase() === category.toLowerCase());
     }
@@ -1147,6 +1834,7 @@ export class SyntheticTravelDataset {
 
   public getPopularJourneys(cityId?: string): PopularJourney[] {
     if (!cityId) return this.popularJourneys;
-    return this.popularJourneys.filter(p => p.originCityId === cityId || p.destCityId === cityId || p.originCityName.toLowerCase() === cityId.toLowerCase() || p.destCityName.toLowerCase() === cityId.toLowerCase());
+    const q = cityId.toLowerCase().trim();
+    return this.popularJourneys.filter(p => p.originCityId === cityId || p.destCityId === cityId || p.originCityName.toLowerCase().includes(q) || p.destCityName.toLowerCase().includes(q));
   }
 }
