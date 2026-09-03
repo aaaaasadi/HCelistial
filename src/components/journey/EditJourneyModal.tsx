@@ -208,7 +208,7 @@ export const EditJourneyModal: React.FC = () => {
                 Modify & Customize Journey
               </h3>
               <p className="text-xs text-text-muted">
-                Live Transport Search across Train, Bus, and Flight APIs with automatic schedule population
+                Synthetic Transport Network & Schedule Search across Train, Bus, and Flight Options
               </p>
             </div>
           </div>
@@ -486,7 +486,7 @@ export const EditJourneyModal: React.FC = () => {
                                         ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                         : 'bg-amber-50 text-amber-800 border-amber-200'
                                     }`}>
-                                      {option.sourceType === 'REAL' ? '🟢 REAL API' : '⚡ MOCK DATA'}
+                                      {option.sourceType === 'REAL' ? '🟢 REAL API' : '⚡ DEMO / SIMULATION DATA'}
                                     </span>
                                   </div>
 
