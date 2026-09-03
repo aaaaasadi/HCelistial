@@ -31,27 +31,27 @@ export const RecoveryPlanCard: React.FC<RecoveryPlanCardProps> = ({ plan }) => {
     switch (plan.tag) {
       case 'RECOMMENDED':
         return {
-          badge: 'bg-primary/20 text-primary-light border-primary/40',
+          badge: 'bg-amber-100 text-amber-900 border-amber-400 font-bold',
           icon: Star,
-          border: 'border-primary/50 shadow-glow-primary'
+          border: 'border-amber-500 shadow-glow-cream ring-2 ring-amber-500/20'
         };
       case 'CHEAPEST':
         return {
-          badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+          badge: 'bg-emerald-100 text-emerald-900 border-emerald-400 font-bold',
           icon: Tag,
-          border: 'border-emerald-500/40 hover:border-emerald-400'
+          border: 'border-emerald-500/60 hover:border-emerald-600'
         };
       case 'FASTEST':
         return {
-          badge: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+          badge: 'bg-blue-100 text-blue-900 border-blue-400 font-bold',
           icon: Zap,
-          border: 'border-amber-500/40 hover:border-amber-400'
+          border: 'border-blue-500/60 hover:border-blue-600'
         };
       default:
         return {
-          badge: 'bg-surface-high text-text-muted border-border',
+          badge: 'bg-stone-100 text-stone-800 border-stone-300 font-bold',
           icon: Tag,
-          border: 'border-border hover:border-border-strong'
+          border: 'border-stone-300 hover:border-stone-400'
         };
     }
   };
