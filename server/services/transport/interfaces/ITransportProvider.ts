@@ -10,6 +10,8 @@ export interface TransportSearchQuery {
   date?: string; // YYYY-MM-DD
   time?: string;
   passengers?: number;
+  query?: string;
+  serviceNumber?: string;
 }
 
 export interface NormalizedTransportOption {
@@ -20,10 +22,12 @@ export interface NormalizedTransportOption {
   title: string;
   origin: string;
   destination: string;
+  travelDate?: string;
   scheduledDeparture: string;
   scheduledArrival: string;
   expectedDeparture: string;
   expectedArrival: string;
+  duration?: string;
   status: TransportOperationalStatus;
   delayMinutes: number;
   fareRupees: number;
@@ -34,6 +38,7 @@ export interface NormalizedTransportOption {
   seatOrClass?: string;
   sourceType: 'REAL' | 'MOCK';
   sourceProvider: string;
+  lastUpdated: string;
   notes?: string;
   rawPayload?: any;
 }
@@ -52,6 +57,7 @@ export interface NormalizedLiveStatus {
   platformOrBay?: string;
   speedKmh?: number;
   lastPing: string;
+  lastUpdated: string;
   reason?: string;
   sourceType: 'REAL' | 'MOCK';
   sourceProvider: string;

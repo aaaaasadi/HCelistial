@@ -19,7 +19,8 @@ import {
   ShieldCheck,
   Zap,
   Info,
-  ArrowRight
+  ArrowRight,
+  AlertCircle
 } from 'lucide-react';
 import { useDemo } from '../../context/DemoContext';
 import { TransportSegment, HotelSegment, ActivitySegment, TripSegment, TransportType } from '../../types';
@@ -54,6 +55,7 @@ export const EditJourneyModal: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<NormalizedTransportOption[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   // Hotel & Activity manual inputs
   const [hotelName, setHotelName] = useState('');
@@ -71,6 +73,7 @@ export const EditJourneyModal: React.FC = () => {
     if (e) e.preventDefault();
     setIsSearching(true);
     setHasSearched(true);
+    setSearchError(null);
 
     try {
       const orig = searchOrigin.trim() || tripOrigin;
@@ -101,8 +104,10 @@ export const EditJourneyModal: React.FC = () => {
         });
         setSearchResults(res.data || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[EditJourneyModal] Transport search failed:', err);
+      setSearchError(err.message || 'Failed to search transport API.');
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
@@ -126,7 +131,7 @@ export const EditJourneyModal: React.FC = () => {
       platformOrTerminal: option.platformOrTerminal || (option.type === 'TRAIN' ? 'Platform 1' : option.type === 'FLIGHT' ? 'Terminal 2' : 'Bay 1'),
       seatOrClass: option.seatOrClass || (option.type === 'TRAIN' ? 'AC Chair Car' : option.type === 'FLIGHT' ? 'Economy Flex' : 'Executive Sleeper'),
       status: option.status === 'DELAYED' ? 'DELAYED' : 'ON_TIME',
-      dataSource: `${option.sourceProvider || 'LIVE API'} • REALTIME VERIFIED`,
+      dataSource: `${option.sourceProvider} [${option.sourceType}]`,
       notes: option.notes || `Booked via ${option.provider}`
     };
 
@@ -203,7 +208,7 @@ export const EditJourneyModal: React.FC = () => {
                 Modify & Customize Journey
               </h3>
               <p className="text-xs text-text-muted">
-                Search real Train, Bus, and Flight schedules with automatic timing population
+                Live Transport Search across Train, Bus, and Flight APIs with automatic schedule population
               </p>
             </div>
           </div>
@@ -275,7 +280,7 @@ export const EditJourneyModal: React.FC = () => {
                   <span>Itinerary Segments ({currentTrip.segments.length})</span>
                 </h4>
                 <p className="text-[11px] text-text-muted font-mono">
-                  Realtime connection feasibility and recovery engine recalculate on every update.
+                  Connection feasibility, transfer buffers, and recovery options recalculate automatically.
                 </p>
               </div>
 
@@ -287,6 +292,7 @@ export const EditJourneyModal: React.FC = () => {
                     setSearchDestination(tripDestination);
                     setSearchResults([]);
                     setHasSearched(false);
+                    setSearchError(null);
                   }}
                   className="px-4 py-2 rounded-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 transition-all shadow-glow-cream"
                 >
@@ -313,6 +319,7 @@ export const EditJourneyModal: React.FC = () => {
                             setSegmentType(t);
                             setSearchResults([]);
                             setHasSearched(false);
+                            setSearchError(null);
                           }}
                           className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-all ${
                             segmentType === t
@@ -346,10 +353,10 @@ export const EditJourneyModal: React.FC = () => {
                       <div className="flex items-center justify-between text-xs text-amber-900 font-semibold font-mono">
                         <span className="flex items-center gap-1.5">
                           <Radio className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-                          <span>Realtime {segmentType} Schedule & Telemetry Search</span>
+                          <span>Live {segmentType} Schedule & Availability Search</span>
                         </span>
                         <span className="text-[10px] text-text-muted font-normal">
-                          (No manual timing input required)
+                          (Departure and arrival times populated automatically)
                         </span>
                       </div>
 
@@ -403,7 +410,7 @@ export const EditJourneyModal: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center justify-between pt-1 flex-wrap gap-2">
                           <div className="flex items-center gap-2">
                             <span className="text-[10px] font-mono text-text-muted">Travel Date:</span>
                             <input
@@ -422,7 +429,7 @@ export const EditJourneyModal: React.FC = () => {
                             {isSearching ? (
                               <>
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                <span>Querying Provider APIs...</span>
+                                <span>Querying Transport Providers...</span>
                               </>
                             ) : (
                               <>
@@ -435,13 +442,23 @@ export const EditJourneyModal: React.FC = () => {
                       </form>
                     </div>
 
+                    {/* Search Error Alert */}
+                    {searchError && (
+                      <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <strong>Provider Notice:</strong> {searchError}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Results Container */}
-                    {hasSearched && (
+                    {hasSearched && !searchError && (
                       <div className="space-y-2.5 pt-1">
                         <div className="text-xs font-bold text-text-primary font-mono flex items-center justify-between">
-                          <span>Verified Schedule Options ({searchResults.length}):</span>
+                          <span>Available Matching Results ({searchResults.length}):</span>
                           <span className="text-[10px] text-text-muted font-normal">
-                            Click "+ Add to Journey" to auto-populate
+                            Select an option to auto-populate journey leg
                           </span>
                         </div>
 
@@ -464,8 +481,12 @@ export const EditJourneyModal: React.FC = () => {
                                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
                                       {option.provider}
                                     </span>
-                                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
-                                      {option.sourceType === 'REAL' ? '🟢 LIVE FEED' : '⚡ VERIFIED'}
+                                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                                      option.sourceType === 'REAL'
+                                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                        : 'bg-amber-50 text-amber-800 border-amber-200'
+                                    }`}>
+                                      {option.sourceType === 'REAL' ? '🟢 REAL API' : '⚡ MOCK DATA'}
                                     </span>
                                   </div>
 
@@ -476,13 +497,16 @@ export const EditJourneyModal: React.FC = () => {
                                   </div>
 
                                   <div className="flex items-center gap-3 text-[11px] text-text-muted font-mono flex-wrap">
+                                    {option.duration && (
+                                      <span>Duration: <strong className="text-text-primary">{option.duration}</strong></span>
+                                    )}
                                     <span>Class: <strong className="text-text-primary">{option.seatOrClass || 'Confirmed'}</strong></span>
                                     <span>Platform/Gate: <strong className="text-text-primary">{option.platformOrTerminal || 'Assigned on arrival'}</strong></span>
                                     {option.fareRupees > 0 && (
                                       <span>Fare: <strong className="text-amber-800">₹{option.fareRupees}</strong></span>
                                     )}
                                     {option.availableSeats !== null && (
-                                      <span className="text-emerald-700 font-semibold">{option.availableSeats} seats left</span>
+                                      <span className="text-emerald-700 font-semibold">{option.availableSeats} seats available</span>
                                     )}
                                   </div>
                                 </div>
