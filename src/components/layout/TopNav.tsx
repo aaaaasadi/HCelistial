@@ -108,7 +108,7 @@ export const TopNav: React.FC = () => {
             </div>
 
             {/* Desktop Navigation Pills */}
-            <nav className="hidden lg:flex items-center gap-1.5 bg-surface-lowest/70 p-1.5 rounded-full border border-border/60">
+            <nav className="hidden lg:flex items-center gap-1.5 bg-surface-lowest/80 p-1.5 rounded-full border border-border/60 shadow-inner">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentTab === item.id;
@@ -116,18 +116,18 @@ export const TopNav: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => setCurrentTab(item.id)}
-                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium font-display transition-all duration-200 select-none ${
+                    className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-display select-none transition-all duration-300 ${
                       isActive
-                        ? 'text-white bg-amber-600 font-semibold shadow-md shadow-amber-600/25'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/80'
+                        ? 'text-white font-bold nav-pill-active shadow-md'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-white/90 nav-pill-inactive'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white stroke-[2.5]' : 'text-text-muted'}`} />
+                    <Icon className={`w-3.5 h-3.5 transition-transform duration-200 ${isActive ? 'text-white stroke-[2.5] scale-110' : 'text-text-muted'}`} />
                     <span>{item.label}</span>
                     {item.badge && (
-                      <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full border leading-none ${
+                      <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-full border leading-none transition-all ${
                         isActive 
-                          ? 'bg-white text-amber-700 border-white font-bold' 
+                          ? 'bg-white text-amber-800 border-white font-bold shadow-sm' 
                           : item.badgeColor || 'bg-white text-text-muted border-border'
                       }`}>
                         {item.badge}
@@ -237,16 +237,18 @@ export const TopNav: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                     isActive
-                      ? 'text-white bg-amber-600 font-semibold shadow-sm'
-                      : 'text-text-secondary bg-surface-lowest hover:bg-white'
+                      ? 'text-white font-bold nav-pill-active shadow-sm'
+                      : 'text-text-secondary bg-surface-lowest hover:bg-white nav-pill-inactive'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-text-muted'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white stroke-[2.5]' : 'text-text-muted'}`} />
                   <span>{item.label}</span>
                   {item.badge && (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white font-mono">
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold ${
+                      isActive ? 'bg-white text-amber-800' : 'bg-white text-text-muted border border-border'
+                    }`}>
                       {item.badge}
                     </span>
                   )}

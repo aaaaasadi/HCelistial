@@ -13,26 +13,32 @@ import { DestinationExplorerView } from './components/destinations/DestinationEx
 const MainView: React.FC = () => {
   const { currentTab } = useDemo();
 
-  switch (currentTab) {
-    case 'dashboard':
-      return <DashboardView />;
-    case 'destinations':
-      return <DestinationExplorerView />;
-    case 'journey':
-      return <MyJourneyView />;
-    case 'monitor':
-      return <LiveMonitorView />;
-    case 'recovery':
-      return <RecoveryCenterView />;
-    case 'ai':
-      return <AITravelGuideView />;
-    case 'preferences':
-      return <PreferencesView />;
-    case 'notifications':
-      return <NotificationsView />;
-    default:
-      return <DashboardView />;
-  }
+  return (
+    <div key={currentTab} className="view-transition">
+      {(() => {
+        switch (currentTab) {
+          case 'dashboard':
+            return <DashboardView />;
+          case 'destinations':
+            return <DestinationExplorerView />;
+          case 'journey':
+            return <MyJourneyView />;
+          case 'monitor':
+            return <LiveMonitorView />;
+          case 'recovery':
+            return <RecoveryCenterView />;
+          case 'ai':
+            return <AITravelGuideView />;
+          case 'preferences':
+            return <PreferencesView />;
+          case 'notifications':
+            return <NotificationsView />;
+          default:
+            return <DashboardView />;
+        }
+      })()}
+    </div>
+  );
 };
 
 export const App: React.FC = () => {

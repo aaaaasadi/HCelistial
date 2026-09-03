@@ -138,6 +138,39 @@
   animation: dash-flow 1.2s linear infinite;
 }
 
+/* Smooth View / Page Transitions */
+@keyframes viewFadeInScale {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.view-transition {
+  animation: viewFadeInScale 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Nav Tab Active Glow & Animation */
+.nav-pill-active {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 4px 14px -2px rgba(217, 119, 6, 0.35), 0 0 10px rgba(217, 119, 6, 0.15);
+  transform: scale(1.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-pill-inactive {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-pill-inactive:hover {
+  transform: translateY(-1px);
+}
+
 /* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
