@@ -14,45 +14,45 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md', p
       case 'SAFE':
       case 'CONFIRMED':
         return {
-          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
-          dot: 'bg-emerald-400',
+          bg: 'bg-emerald-50 border-emerald-300 text-emerald-800',
+          dot: 'bg-emerald-600',
           label: status === 'ON_TIME' ? 'ON TIME' : status === 'SAFE' ? 'SAFE' : 'CONFIRMED'
         };
       case 'RECOVERED':
         return {
-          bg: 'bg-emerald-500/15 border-emerald-400/40 text-emerald-300 shadow-glow-success',
-          dot: 'bg-emerald-400 animate-pulse',
+          bg: 'bg-emerald-100 border-emerald-400 text-emerald-900 shadow-sm font-semibold',
+          dot: 'bg-emerald-600 animate-pulse',
           label: '✓ RECOVERED'
         };
       case 'DELAYED':
         return {
-          bg: 'bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-glow-danger',
-          dot: 'bg-rose-500 animate-ping-slow',
+          bg: 'bg-rose-100 border-rose-300 text-rose-800 shadow-sm font-semibold',
+          dot: 'bg-rose-600 animate-ping-slow',
           label: 'DELAYED (+3h 20m)'
         };
       case 'MISSED':
         return {
-          bg: 'bg-rose-500/20 border-rose-500/50 text-rose-300 shadow-glow-danger',
-          dot: 'bg-rose-400',
+          bg: 'bg-rose-100 border-rose-400 text-rose-900 shadow-sm font-semibold',
+          dot: 'bg-rose-600',
           label: 'MISSED'
         };
       case 'AT_RISK':
       case 'TIGHT':
       case 'LATE_CHECKIN_ALERT':
         return {
-          bg: 'bg-amber-500/15 border-amber-500/40 text-amber-400 shadow-glow-warning',
-          dot: 'bg-amber-400 animate-pulse',
+          bg: 'bg-amber-100 border-amber-300 text-amber-900 shadow-sm font-semibold',
+          dot: 'bg-amber-600 animate-pulse',
           label: status === 'LATE_CHECKIN_ALERT' ? 'LATE CHECK-IN' : 'AT RISK'
         };
       case 'CANCELLED':
         return {
-          bg: 'bg-red-900/30 border-red-700/50 text-red-400',
-          dot: 'bg-red-500',
+          bg: 'bg-red-100 border-red-300 text-red-900 font-semibold',
+          dot: 'bg-red-600',
           label: 'CANCELLED'
         };
       default:
         return {
-          bg: 'bg-surface-high border-border text-text-secondary',
+          bg: 'bg-surface-lowest border-border text-text-secondary',
           dot: 'bg-text-muted',
           label: status
         };
@@ -60,7 +60,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md', p
   };
 
   const style = getBadgeStyle();
-  const sizeClass = size === 'sm' ? 'text-[11px] px-2 py-0.5' : size === 'lg' ? 'text-sm px-3.5 py-1' : 'text-xs px-2.5 py-1';
+  const sizeClass = size === 'sm' ? 'text-[11px] px-2.5 py-0.5' : size === 'lg' ? 'text-xs px-3.5 py-1' : 'text-xs px-3 py-1';
 
   return (
     <span

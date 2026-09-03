@@ -44,13 +44,13 @@ export const DashboardView: React.FC = () => {
   const getTransportIcon = (type: string) => {
     switch (type) {
       case 'TRAIN':
-        return <Train className="w-4 h-4" />;
+        return <Train className="w-4 h-4 text-amber-700" />;
       case 'BUS':
-        return <Bus className="w-4 h-4" />;
+        return <Bus className="w-4 h-4 text-amber-700" />;
       case 'FLIGHT':
-        return <Plane className="w-4 h-4" />;
+        return <Plane className="w-4 h-4 text-amber-700" />;
       default:
-        return <Train className="w-4 h-4" />;
+        return <Train className="w-4 h-4 text-amber-700" />;
     }
   };
 
@@ -64,15 +64,15 @@ export const DashboardView: React.FC = () => {
           </h1>
           <p className="text-sm text-text-muted mt-0.5">
             {isDisrupted ? (
-              <span className="text-rose-400 font-medium">
+              <span className="text-rose-700 font-medium">
                 ⚠️ Active disruption detected on your itinerary. Recovery action recommended.
               </span>
             ) : isRecovered ? (
-              <span className="text-emerald-400 font-medium">
+              <span className="text-emerald-700 font-medium">
                 ✓ Your journey has been reconstructed and is operating on schedule.
               </span>
             ) : isAtRisk ? (
-              <span className="text-amber-400 font-medium">
+              <span className="text-amber-700 font-medium">
                 ⚠️ Transit delay detected. Buffer is tightening.
               </span>
             ) : (
@@ -86,26 +86,26 @@ export const DashboardView: React.FC = () => {
           {!isDisrupted && !isRecovered && (
             <button
               onClick={simulateDisruption}
-              className="px-3.5 py-2 rounded-lg bg-disruption/20 hover:bg-disruption/30 border border-disruption/40 text-rose-300 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm"
             >
-              <Flame className="w-4 h-4 text-disruption" />
+              <Flame className="w-4 h-4 text-rose-600 animate-bounce" />
               <span>Simulate Disruption</span>
             </button>
           )}
 
           <button
             onClick={() => setCurrentTab('monitor')}
-            className="px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-high border border-border text-xs font-medium flex items-center gap-1.5 transition-colors text-text-secondary hover:text-text-primary"
+            className="px-4 py-2 rounded-full bg-white hover:bg-surface-lowest border border-border text-xs font-semibold flex items-center gap-1.5 transition-colors text-text-secondary hover:text-text-primary shadow-sm"
           >
-            <Activity className="w-3.5 h-3.5 text-primary" />
+            <Activity className="w-3.5 h-3.5 text-amber-600" />
             <span>Live Monitor</span>
           </button>
 
           <button
             onClick={() => setCurrentTab('ai')}
-            className="px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-high border border-border text-xs font-medium flex items-center gap-1.5 transition-colors text-text-secondary hover:text-text-primary"
+            className="px-4 py-2 rounded-full bg-white hover:bg-surface-lowest border border-border text-xs font-semibold flex items-center gap-1.5 transition-colors text-text-secondary hover:text-text-primary shadow-sm"
           >
-            <Bot className="w-3.5 h-3.5 text-primary-light" />
+            <Bot className="w-3.5 h-3.5 text-amber-600" />
             <span>Ask AI</span>
           </button>
         </div>
@@ -113,13 +113,13 @@ export const DashboardView: React.FC = () => {
 
       {/* Main Journey Health Card */}
       <div
-        className={`rounded-2xl p-6 transition-all duration-300 ${
+        className={`rounded-2xl sm:rounded-3xl p-6 transition-all duration-300 ${
           isDisrupted
             ? 'hud-card-disrupted shadow-glow-danger'
             : isRecovered
             ? 'hud-card-recovered shadow-glow-success'
             : isAtRisk
-            ? 'bg-amber-950/20 border border-amber-500/40'
+            ? 'bg-amber-50 border border-amber-300 shadow-sm'
             : 'hud-card'
         }`}
       >
@@ -131,17 +131,17 @@ export const DashboardView: React.FC = () => {
                 CURRENT ITINERARY
               </span>
               <span className="text-text-subtle">•</span>
-              <span className="font-mono text-xs text-primary-light">
+              <span className="font-mono text-xs text-amber-700 font-semibold">
                 {currentTrip.id}
               </span>
             </div>
 
-            <div className="flex items-center gap-3 text-xl sm:text-2xl font-black font-display">
+            <div className="flex items-center gap-3 text-xl sm:text-2xl font-black font-display text-text-primary">
               <span>{currentTrip.origin.split(' ')[0]}</span>
               <ArrowRight className="w-5 h-5 text-text-muted" />
               <span>Pune</span>
               <ArrowRight className="w-5 h-5 text-text-muted" />
-              <span className="text-primary">{currentTrip.destination.split(',')[0]}</span>
+              <span className="text-amber-700">{currentTrip.destination.split(',')[0]}</span>
             </div>
 
             <p className="text-xs text-text-muted">
@@ -165,10 +165,10 @@ export const DashboardView: React.FC = () => {
                 <span
                   className={`text-3xl sm:text-4xl font-black font-display ${
                     journeyHealth >= 90
-                      ? 'text-emerald-400'
+                      ? 'text-emerald-700'
                       : journeyHealth >= 70
-                      ? 'text-amber-400'
-                      : 'text-rose-400 animate-pulse'
+                      ? 'text-amber-700'
+                      : 'text-rose-700 animate-pulse'
                   }`}
                 >
                   {journeyHealth}%
@@ -192,7 +192,7 @@ export const DashboardView: React.FC = () => {
               />
               <button
                 onClick={() => setCurrentTab('journey')}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-light transition-colors"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 hover:text-amber-800 transition-colors"
               >
                 <span>View Complete Journey</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -202,14 +202,14 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Progress bar visualizer */}
-        <div className="w-full bg-surface-lowest rounded-full h-2 mt-6 overflow-hidden border border-border/50">
+        <div className="w-full bg-amber-100/60 rounded-full h-2.5 mt-6 overflow-hidden border border-amber-900/10">
           <div
             className={`h-full transition-all duration-500 rounded-full ${
               journeyHealth >= 90
-                ? 'bg-emerald-500 shadow-glow-success'
+                ? 'bg-emerald-600 shadow-glow-success'
                 : journeyHealth >= 70
-                ? 'bg-amber-500 shadow-glow-warning'
-                : 'bg-rose-500 shadow-glow-danger'
+                ? 'bg-amber-600 shadow-glow-warning'
+                : 'bg-rose-600 shadow-glow-danger'
             }`}
             style={{ width: `${journeyHealth}%` }}
           />
@@ -218,23 +218,23 @@ export const DashboardView: React.FC = () => {
 
       {/* Disruption Alert Banner */}
       {isDisrupted && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-300 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 flex-shrink-0 mt-0.5">
+            <div className="w-9 h-9 rounded-xl bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-700 flex-shrink-0 mt-0.5">
               <AlertTriangle className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h4 className="text-sm font-bold font-display text-rose-200">
+              <h4 className="text-sm font-bold font-display text-rose-900">
                 🚨 JOURNEY DISRUPTION DETECTED
               </h4>
-              <p className="text-xs text-rose-300/80 mt-0.5">
+              <p className="text-xs text-rose-800/80 mt-0.5">
                 Feeder delay breaks your downstream transfer. Available buffer is insufficient.
               </p>
             </div>
           </div>
           <button
             onClick={() => setCurrentTab('recovery')}
-            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold font-display flex items-center justify-center gap-2 shadow-glow-danger transition-colors flex-shrink-0"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-display flex items-center justify-center gap-2 shadow-glow-danger transition-colors flex-shrink-0"
           >
             <LifeBuoy className="w-3.5 h-3.5" />
             <span>Analyze & Recover</span>
@@ -263,7 +263,7 @@ export const DashboardView: React.FC = () => {
               }
             })
           }
-          className="hud-card-interactive p-4 rounded-xl cursor-pointer"
+          className="hud-card-interactive p-5 rounded-2xl cursor-pointer"
         >
           <div className="flex items-center justify-between text-xs text-text-muted font-mono mb-2">
             <span>CONNECTION RISK</span>
@@ -271,7 +271,7 @@ export const DashboardView: React.FC = () => {
           </div>
           <div className="flex items-center justify-between">
             <RiskIndicator level={connectionRisk} />
-            <span className="text-[11px] text-primary hover:underline font-mono">
+            <span className="text-[11px] text-amber-700 hover:underline font-mono font-bold">
               Why?
             </span>
           </div>
@@ -283,11 +283,11 @@ export const DashboardView: React.FC = () => {
         {/* Active Alerts */}
         <div
           onClick={() => setCurrentTab('notifications')}
-          className="hud-card-interactive p-4 rounded-xl cursor-pointer"
+          className="hud-card-interactive p-5 rounded-2xl cursor-pointer"
         >
           <div className="flex items-center justify-between text-xs text-text-muted font-mono mb-2">
             <span>ACTIVE ALERTS</span>
-            <AlertTriangle className={`w-3.5 h-3.5 ${activeAlertsCount > 0 ? 'text-rose-400' : 'text-text-subtle'}`} />
+            <AlertTriangle className={`w-3.5 h-3.5 ${activeAlertsCount > 0 ? 'text-rose-600' : 'text-text-subtle'}`} />
           </div>
           <div className="text-2xl font-black font-display text-text-primary">
             {activeAlertsCount}
@@ -302,16 +302,16 @@ export const DashboardView: React.FC = () => {
         {/* Recovery Plans */}
         <div
           onClick={() => setCurrentTab('recovery')}
-          className="hud-card-interactive p-4 rounded-xl cursor-pointer"
+          className="hud-card-interactive p-5 rounded-2xl cursor-pointer"
         >
           <div className="flex items-center justify-between text-xs text-text-muted font-mono mb-2">
             <span>RECOVERY PLANS</span>
-            <LifeBuoy className="w-3.5 h-3.5 text-primary" />
+            <LifeBuoy className="w-3.5 h-3.5 text-amber-600" />
           </div>
-          <div className="text-2xl font-black font-display text-primary">
+          <div className="text-2xl font-black font-display text-amber-700">
             {isRecovered ? '1 Selected' : isDisrupted ? `${recoveryPlans.length} Available` : '0 Required'}
           </div>
-          <p className="text-[11px] text-text-muted mt-2 font-mono text-primary-light truncate">
+          <p className="text-[11px] text-amber-800/80 mt-2 font-mono truncate">
             {isDisrupted && recommendedPlan
               ? `Recommended: ${recommendedPlan.title.split(' ')[0]} (${recommendedPlan.recoveryScore}% Score)`
               : isRecovered
@@ -332,7 +332,7 @@ export const DashboardView: React.FC = () => {
           </h3>
           <button
             onClick={() => setCurrentTab('journey')}
-            className="text-xs text-primary hover:text-primary-light font-medium flex items-center gap-1"
+            className="text-xs text-amber-700 hover:text-amber-800 font-semibold flex items-center gap-1"
           >
             <span>Timeline Graph</span>
             <ChevronRight className="w-3 h-3" />
@@ -366,7 +366,7 @@ export const DashboardView: React.FC = () => {
                       }
                     })
                   }
-                  className={`p-4 rounded-xl cursor-pointer hud-card-interactive ${
+                  className={`p-5 rounded-2xl cursor-pointer hud-card-interactive ${
                     tSeg.status === 'MISSED' || tSeg.status === 'CANCELLED' || tSeg.delayMinutes > 60
                       ? 'hud-card-disrupted'
                       : tSeg.status === 'RECOVERED'
@@ -376,7 +376,7 @@ export const DashboardView: React.FC = () => {
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                      <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
                         {getTransportIcon(tSeg.type)}
                       </div>
                       <div>
@@ -397,7 +397,7 @@ export const DashboardView: React.FC = () => {
                     </div>
                     <div className="text-xs text-text-muted font-mono">
                       {tSeg.departureTime} →{' '}
-                      <span className={tSeg.delayMinutes > 0 ? 'text-rose-400 font-bold' : ''}>
+                      <span className={tSeg.delayMinutes > 0 ? 'text-rose-700 font-bold' : ''}>
                         {tSeg.estimatedArrival}
                       </span>
                     </div>
@@ -405,7 +405,7 @@ export const DashboardView: React.FC = () => {
 
                   <div className="pt-2 border-t border-border/50 flex items-center justify-between">
                     <ProviderBadge type={tSeg.type} />
-                    <span className="text-[10px] text-text-muted font-mono">
+                    <span className="text-[10px] text-text-muted font-mono font-medium">
                       {tSeg.delayMinutes > 0 ? `+${tSeg.delayMinutes}m` : 'On Time'}
                     </span>
                   </div>
@@ -434,11 +434,11 @@ export const DashboardView: React.FC = () => {
                       }
                     })
                   }
-                  className="p-4 rounded-xl cursor-pointer hud-card-interactive"
+                  className="p-5 rounded-2xl cursor-pointer hud-card-interactive"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                      <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
                         <Building2 className="w-4 h-4" />
                       </div>
                       <div>
@@ -463,9 +463,11 @@ export const DashboardView: React.FC = () => {
                   </div>
 
                   <div className="pt-2 border-t border-border/50 flex items-center justify-between">
-                    <ProviderBadge type="HOTEL" />
-                    <span className="text-[10px] text-text-muted font-mono truncate max-w-[80px]">
+                    <span className="text-[10px] font-mono text-text-muted">
                       {hSeg.bookingRef}
+                    </span>
+                    <span className="text-[10px] text-emerald-700 font-mono font-medium">
+                      Confirmed
                     </span>
                   </div>
                 </div>
@@ -485,26 +487,26 @@ export const DashboardView: React.FC = () => {
                       data: {
                         Activity: aSeg.name,
                         Location: aSeg.location,
-                        ScheduledTime: aSeg.startTime,
+                        Time: aSeg.startTime,
                         Status: aSeg.status,
                         BookingRef: aSeg.bookingRef,
                         Source: aSeg.dataSource
                       }
                     })
                   }
-                  className="p-4 rounded-xl cursor-pointer hud-card-interactive"
+                  className="p-5 rounded-2xl cursor-pointer hud-card-interactive"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                      <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
                         <Ticket className="w-4 h-4" />
                       </div>
                       <div>
                         <span className="text-xs font-bold font-mono text-text-secondary uppercase">
                           ACTIVITY
                         </span>
-                        <div className="text-xs text-text-muted font-mono">
-                          Goa Watersports
+                        <div className="text-xs text-text-muted font-mono truncate max-w-[120px]">
+                          {aSeg.name}
                         </div>
                       </div>
                     </div>
@@ -513,17 +515,19 @@ export const DashboardView: React.FC = () => {
 
                   <div className="my-3 space-y-1">
                     <div className="text-sm font-bold font-display text-text-primary truncate">
-                      Grand Island Scuba
+                      {aSeg.name}
                     </div>
                     <div className="text-xs text-text-muted font-mono">
-                      {aSeg.startTime}
+                      Schedule: {aSeg.startTime}
                     </div>
                   </div>
 
                   <div className="pt-2 border-t border-border/50 flex items-center justify-between">
-                    <ProviderBadge type="ACTIVITY" />
-                    <span className="text-[10px] text-text-muted font-mono">
+                    <span className="text-[10px] font-mono text-text-muted">
                       {aSeg.bookingRef}
+                    </span>
+                    <span className="text-[10px] text-emerald-700 font-mono font-medium">
+                      Active
                     </span>
                   </div>
                 </div>

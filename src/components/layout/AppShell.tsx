@@ -5,7 +5,7 @@ import { DetailModal } from '../common/DetailModal';
 
 export const AppShell: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-surface text-text-primary selection:bg-cream-gold/30 selection:text-cream-light">
+    <div className="min-h-screen flex flex-col bg-surface text-text-primary selection:bg-amber-500/20 selection:text-amber-900">
       {/* Floating Top Header Navigation */}
       <TopNav />
 
@@ -21,10 +21,10 @@ export const AppShell: React.FC<{ children: ReactNode }> = ({ children }) => {
       <DetailModal />
 
       {/* Elevated Warm Glass Footer */}
-      <footer className="w-full bg-surface-lowest/80 border-t border-border/60 py-5 px-4 text-center text-xs text-text-muted font-mono mt-8 backdrop-blur-md">
+      <footer className="w-full bg-white/80 border-t border-amber-900/10 py-5 px-4 text-center text-xs text-text-muted font-mono mt-8 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-cream-muted font-sans font-medium">CelestialRescue — Autonomous Disruption Recovery Engine</span>
-          <span className="px-3 py-1 rounded-full bg-surface-container border border-border/80 text-[11px] text-cream-gold/80">
+          <span className="text-text-secondary font-sans font-medium">CelestialRescue — Autonomous Disruption Recovery Engine</span>
+          <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-[11px] text-amber-800 font-semibold">
             Phase 1 Autonomous Protocol
           </span>
         </div>
