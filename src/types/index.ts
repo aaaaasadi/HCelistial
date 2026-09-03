@@ -423,3 +423,13 @@ export interface IAIService {
   summarizeDisruption(context: AITravelContext): Promise<AIResponse>;
 }
 
+export interface TravelerUser {
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  bookingRef: string;
+  avatarInitials: string;
+  avatarColor?: string;
+}
+

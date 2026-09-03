@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Compass,
   LayoutDashboard,
@@ -8,6 +8,12 @@ import {
   Bot,
   Sliders,
   Bell,
+  User,
+  LogOut,
+  Edit3,
+  UserCheck,
+  ChevronDown,
+  Sparkles
 } from 'lucide-react';
 import { useDemo } from '../../context/DemoContext';
 import { NavigationTab } from '../../types';
@@ -17,8 +23,25 @@ export const TopNav: React.FC = () => {
     currentTab, 
     setCurrentTab, 
     journeyStatus, 
-    unreadNotificationsCount 
+    unreadNotificationsCount,
+    currentUser,
+    openAuthModal,
+    logoutUser,
+    openEditJourneyModal
   } = useDemo();
+
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const isDisrupted = journeyStatus === 'DISRUPTED';
   const isRecovered = journeyStatus === 'RECOVERED';
@@ -113,7 +136,7 @@ export const TopNav: React.FC = () => {
               })}
             </nav>
 
-            {/* Right Side: Live Status Badge & Traveler Pill */}
+            {/* Right Side: Live Status Badge & Interactive Profile Dropdown */}
             <div className="flex items-center gap-3">
               {/* Live Status Pill */}
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-lowest/80 border border-border/80 text-xs font-mono">
@@ -127,19 +150,77 @@ export const TopNav: React.FC = () => {
                 </span>
               </div>
 
-              {/* Profile Avatar Pill */}
-              <div className="flex items-center gap-2.5 pl-1">
-                <div className="w-9 h-9 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-xs font-bold text-amber-800 font-mono shadow-sm">
-                  AM
-                </div>
-                <div className="hidden xl:block text-left">
-                  <div className="text-xs font-medium text-text-primary leading-tight">
-                    Arjun Mehta
+              {/* Profile Avatar Pill with Dropdown */}
+              <div className="relative" ref={profileMenuRef}>
+                <div
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className="flex items-center gap-2.5 p-1 sm:pr-2.5 rounded-full hover:bg-amber-50/80 cursor-pointer border border-transparent hover:border-amber-200 transition-all select-none"
+                >
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold font-mono shadow-sm border ${currentUser.avatarColor || 'bg-amber-100 text-amber-800 border-amber-300'}`}>
+                    {currentUser.avatarInitials}
                   </div>
-                  <div className="text-[10px] text-text-muted font-mono">
-                    BKG-78291
+                  <div className="hidden xl:block text-left">
+                    <div className="text-xs font-medium text-text-primary leading-tight flex items-center gap-1">
+                      <span>{currentUser.name}</span>
+                      <ChevronDown className={`w-3 h-3 text-text-muted transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
+                    </div>
+                    <div className="text-[10px] text-text-muted font-mono">
+                      {currentUser.bookingRef}
+                    </div>
                   </div>
                 </div>
+
+                {/* Profile Dropdown Menu */}
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white border border-amber-900/15 rounded-2xl shadow-glass-warm p-2.5 space-y-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-3 py-2 border-b border-amber-900/10">
+                      <div className="text-xs font-bold text-text-primary">
+                        {currentUser.name}
+                      </div>
+                      <div className="text-[11px] text-text-muted font-mono truncate">
+                        {currentUser.email}
+                      </div>
+                      <div className="text-[10px] text-amber-800 font-mono mt-1 font-semibold">
+                        Ref: {currentUser.bookingRef}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        openEditJourneyModal();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-text-primary hover:bg-amber-50 text-left transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4 text-amber-600" />
+                      <span>Modify / Edit Journey</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        openAuthModal();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-text-primary hover:bg-amber-50 text-left transition-colors"
+                    >
+                      <UserCheck className="w-4 h-4 text-amber-600" />
+                      <span>Switch Traveler Persona</span>
+                    </button>
+
+                    <div className="pt-1 border-t border-amber-900/10">
+                      <button
+                        onClick={() => {
+                          setIsProfileMenuOpen(false);
+                          logoutUser();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 text-left transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 text-rose-600" />
+                        <span>Log Out / Sign In</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

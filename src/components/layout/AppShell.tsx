@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react';
 import { TopNav } from './TopNav';
 import { DemoStateBar } from './DemoStateBar';
 import { DetailModal } from '../common/DetailModal';
+import { UserAuthModal } from '../auth/UserAuthModal';
+import { EditJourneyModal } from '../journey/EditJourneyModal';
 
 export const AppShell: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
@@ -19,6 +21,8 @@ export const AppShell: React.FC<{ children: ReactNode }> = ({ children }) => {
 
       {/* Global Modals */}
       <DetailModal />
+      <UserAuthModal />
+      <EditJourneyModal />
 
       {/* Elevated Warm Glass Footer */}
       <footer className="w-full bg-white/80 border-t border-amber-900/10 py-5 px-4 text-center text-xs text-text-muted font-mono mt-8 backdrop-blur-md">

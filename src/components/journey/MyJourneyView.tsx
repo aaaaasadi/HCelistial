@@ -33,6 +33,7 @@ export const MyJourneyView: React.FC = () => {
     resetJourney,
     setCurrentTab,
     openDetailModal,
+    openEditJourneyModal,
     confirmedPlan
   } = useDemo();
 
@@ -95,19 +96,26 @@ export const MyJourneyView: React.FC = () => {
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={openEditJourneyModal}
+            className="px-3.5 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+          >
+            <span>✏️ Modify Journey</span>
+          </button>
+
           {!isDisrupted && !isRecovered ? (
             <button
               onClick={simulateDisruption}
-              className="px-3.5 py-1.5 rounded-lg bg-disruption/20 hover:bg-disruption/30 border border-disruption/40 text-rose-300 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-800 text-xs font-bold font-mono flex items-center gap-1.5 transition-colors shadow-sm"
             >
-              <Flame className="w-4 h-4 text-disruption animate-bounce" />
+              <Flame className="w-4 h-4 text-rose-600 animate-bounce" />
               <span>Simulate Disruption</span>
             </button>
           ) : isDisrupted ? (
             <button
               onClick={() => setCurrentTab('recovery')}
-              className="px-3.5 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold font-display flex items-center gap-1.5 shadow-glow-danger transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-display flex items-center gap-1.5 shadow-glow-danger transition-colors"
             >
               <Sparkles className="w-4 h-4" />
               <span>View Recovery Plans</span>
@@ -115,9 +123,9 @@ export const MyJourneyView: React.FC = () => {
           ) : (
             <button
               onClick={resetJourney}
-              className="px-3 py-1.5 rounded-lg bg-surface-high hover:bg-surface-highest border border-border text-xs text-text-secondary font-mono flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-1.5 rounded-full bg-white hover:bg-surface-lowest border border-border text-xs text-text-secondary font-mono flex items-center gap-1.5 transition-colors shadow-sm"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
               <span>Reset Journey</span>
             </button>
           )}

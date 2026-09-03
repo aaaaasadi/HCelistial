@@ -23,6 +23,7 @@ import { TransportSegment, HotelSegment, ActivitySegment } from '../../types';
 export const DashboardView: React.FC = () => {
   const {
     currentTrip,
+    currentUser,
     journeyHealth,
     journeyStatus,
     connectionRisk,
@@ -32,7 +33,8 @@ export const DashboardView: React.FC = () => {
     recommendedPlan,
     setCurrentTab,
     simulateDisruption,
-    openDetailModal
+    openDetailModal,
+    openEditJourneyModal
   } = useDemo();
 
   const isDisrupted = journeyStatus === 'DISRUPTED';
@@ -60,7 +62,7 @@ export const DashboardView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight text-text-primary">
-            Good evening, Arjun
+            Good day, {currentUser?.name?.split(' ')[0] || 'Traveler'}
           </h1>
           <p className="text-sm text-text-muted mt-0.5">
             {isDisrupted ? (
@@ -82,7 +84,14 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={openEditJourneyModal}
+            className="px-4 py-2 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+          >
+            <span>✏️ Modify Journey</span>
+          </button>
+
           {!isDisrupted && !isRecovered && (
             <button
               onClick={simulateDisruption}

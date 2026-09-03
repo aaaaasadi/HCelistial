@@ -20,8 +20,39 @@ import {
   NavigationTab,
   DemoScenarioId,
   AITravelContext,
-  AIAction
+  AIAction,
+  TravelerUser
 } from '../types';
+
+export const PRESET_USERS: TravelerUser[] = [
+  {
+    id: 'user-arjun',
+    name: 'Arjun Mehta',
+    email: 'arjun.mehta@enterprise.com',
+    role: 'Frequent Business Traveler',
+    bookingRef: 'BKG-78291',
+    avatarInitials: 'AM',
+    avatarColor: 'bg-amber-100 text-amber-900 border-amber-300'
+  },
+  {
+    id: 'user-priya',
+    name: 'Priya Sharma',
+    email: 'priya.sharma@techglobal.io',
+    role: 'Executive Conference Delegate',
+    bookingRef: 'BKG-44912',
+    avatarInitials: 'PS',
+    avatarColor: 'bg-emerald-100 text-emerald-900 border-emerald-300'
+  },
+  {
+    id: 'user-marcus',
+    name: 'Marcus Vance',
+    email: 'marcus.v@adventures.org',
+    role: 'International Explorer',
+    bookingRef: 'BKG-90183',
+    avatarInitials: 'MV',
+    avatarColor: 'bg-blue-100 text-blue-900 border-blue-300'
+  }
+];
 import { getScenarioTrip, BASE_HOTEL_SEGMENT, BASE_ACTIVITY_SEGMENT } from '../data/mockJourneyData';
 import { calculateConnection } from '../utils/connectionEngine';
 import {
@@ -98,6 +129,23 @@ interface DemoContextType {
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
 
+  // User Profile & Authentication
+  currentUser: TravelerUser;
+  isAuthModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
+  loginUser: (user: TravelerUser) => void;
+  logoutUser: () => void;
+
+  // Journey Customization / Editing
+  isEditJourneyModalOpen: boolean;
+  openEditJourneyModal: () => void;
+  closeEditJourneyModal: () => void;
+  updateTripDetails: (title: string, origin: string, destination: string) => void;
+  addTripSegment: (segment: TripSegment) => void;
+  removeTripSegment: (segmentId: string) => void;
+  editTripSegment: (segmentId: string, updates: Partial<TripSegment>) => void;
+
   // Detail Modal
   isConfirmModalOpen: boolean;
   detailModal: DetailModalData | null;
@@ -120,6 +168,9 @@ export const DemoProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [currentTab, setCurrentTab] = useState<NavigationTab>('dashboard');
   const [activeScenario, setActiveScenario] = useState<DemoScenarioId>('SCENARIO_1_NORMAL');
   const [currentTrip, setCurrentTrip] = useState<Trip>(() => getScenarioTrip('SCENARIO_1_NORMAL'));
+  const [currentUser, setCurrentUser] = useState<TravelerUser>(PRESET_USERS[0]);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isEditJourneyModalOpen, setIsEditJourneyModalOpen] = useState<boolean>(false);
   const [userPreferences, setUserPreferences] = useState<UserPreferences>(defaultPreferences);
   const [selectedPlan, setSelectedPlan] = useState<RecoveryPlan | null>(null);
   const [confirmedPlan, setConfirmedPlan] = useState<RecoveryPlan | null>(null);
@@ -129,6 +180,63 @@ export const DemoProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [detailModal, setDetailModal] = useState<DetailModalData | null>(null);
   const [isRefreshingTelemetry, setIsRefreshingTelemetry] = useState(false);
   const [isDatabaseMode, setIsDatabaseMode] = useState<boolean>(false);
+
+  const loginUser = (user: TravelerUser) => {
+    setCurrentUser(user);
+    setIsAuthModalOpen(false);
+    setNotifications((prev) => [
+      {
+        id: `notif-login-${Date.now()}`,
+        type: 'INFO',
+        title: `👤 Logged in as ${user.name}`,
+        message: `Active booking ${user.bookingRef} loaded into Central Trip Store.`,
+        timestamp: 'Just now',
+        read: false,
+        targetTab: 'dashboard'
+      },
+      ...prev
+    ]);
+  };
+
+  const logoutUser = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const closeAuthModal = () => setIsAuthModalOpen(false);
+
+  const openEditJourneyModal = () => setIsEditJourneyModalOpen(true);
+  const closeEditJourneyModal = () => setIsEditJourneyModalOpen(false);
+
+  const updateTripDetails = (title: string, origin: string, destination: string) => {
+    setCurrentTrip((prev) => ({
+      ...prev,
+      title: title.trim() || prev.title,
+      origin: origin.trim() || prev.origin,
+      destination: destination.trim() || prev.destination
+    }));
+  };
+
+  const addTripSegment = (segment: TripSegment) => {
+    setCurrentTrip((prev) => ({
+      ...prev,
+      segments: [...prev.segments, segment]
+    }));
+  };
+
+  const removeTripSegment = (segmentId: string) => {
+    setCurrentTrip((prev) => ({
+      ...prev,
+      segments: prev.segments.filter((s) => s.id !== segmentId)
+    }));
+  };
+
+  const editTripSegment = (segmentId: string, updates: Partial<TripSegment>) => {
+    setCurrentTrip((prev) => ({
+      ...prev,
+      segments: prev.segments.map((s) => (s.id === segmentId ? ({ ...s, ...updates } as TripSegment) : s))
+    }));
+  };
 
   // Connect to PostgreSQL backend on mount
   useEffect(() => {
@@ -691,6 +799,19 @@ export const DemoProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         unreadNotificationsCount: notifications.filter((n) => !n.read).length,
         markNotificationRead,
         markAllNotificationsRead,
+        currentUser,
+        isAuthModalOpen,
+        openAuthModal,
+        closeAuthModal,
+        loginUser,
+        logoutUser,
+        isEditJourneyModalOpen,
+        openEditJourneyModal,
+        closeEditJourneyModal,
+        updateTripDetails,
+        addTripSegment,
+        removeTripSegment,
+        editTripSegment,
         isConfirmModalOpen,
         detailModal,
         openDetailModal,
