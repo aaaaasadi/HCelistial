@@ -2,6 +2,9 @@
 
 > **Intelligent Travel Resilience**: Detecting transit disruptions, calculating cascading connection and booking risks, generating scored multimodal alternatives (Train, Bus, Flight), and providing a grounded AI Travel Guide backed by PostgreSQL 18.
 
+🌐 **Live Web Application**: [https://aaaaasadi.github.io/HCelistial/](https://aaaaasadi.github.io/HCelistial/)  
+📦 **Repository**: [https://github.com/aaaaasadi/HCelistial](https://github.com/aaaaasadi/HCelistial)
+
 ---
 
 ## 🏗️ System Architecture
