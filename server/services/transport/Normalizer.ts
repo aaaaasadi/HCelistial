@@ -22,7 +22,7 @@ export class Normalizer {
 
     const delayMinutes = typeof raw.delayMinutes === 'number'
       ? raw.delayMinutes
-      : parseInt(raw.late_minutes || raw.delay || '0', 10) || 0;
+      : parseInt(raw.late_minutes || raw.delay || raw.delay_minutes || '0', 10) || 0;
 
     let status: TransportOperationalStatus = 'ON_TIME';
     if (raw.cancelled || raw.is_cancelled) {
@@ -34,16 +34,16 @@ export class Normalizer {
     }
 
     return {
-      serviceNumber: raw.train_number || raw.trainNumber || trainNumber,
+      serviceNumber: raw.train_number || raw.trainNumber || raw.train_no || trainNumber,
       transportType: 'TRAIN',
       status,
       delayMinutes,
-      scheduledDeparture: raw.scheduled_departure || raw.scheduledDeparture || '10:00 AM',
-      scheduledArrival: raw.scheduled_arrival || raw.scheduledArrival || '1:30 PM',
-      expectedDeparture: raw.expected_departure || raw.expectedDeparture || raw.scheduled_departure || '10:00 AM',
-      expectedArrival: raw.expected_arrival || raw.expectedArrival || raw.scheduled_arrival || '1:30 PM',
-      currentLocation: raw.current_station_name || raw.currentStation || raw.location || 'En Route',
-      nextStop: raw.next_station_name || raw.nextStation || undefined,
+      scheduledDeparture: raw.scheduled_departure || raw.scheduledDeparture || raw.from_std || '10:00 AM',
+      scheduledArrival: raw.scheduled_arrival || raw.scheduledArrival || raw.to_sta || '1:30 PM',
+      expectedDeparture: raw.expected_departure || raw.expectedDeparture || raw.scheduled_departure || raw.from_std || '10:00 AM',
+      expectedArrival: raw.expected_arrival || raw.expectedArrival || raw.scheduled_arrival || raw.to_sta || '1:30 PM',
+      currentLocation: raw.current_station_name || raw.currentStation || raw.current_location || raw.location || 'En Route',
+      nextStop: raw.next_station_name || raw.nextStation || raw.next_stop || undefined,
       platformOrBay: raw.platform ? `Platform ${raw.platform}` : undefined,
       speedKmh: typeof raw.speed === 'number' ? raw.speed : undefined,
       lastPing: raw.last_updated || raw.lastPing || 'Just now',
@@ -57,13 +57,26 @@ export class Normalizer {
 
   /**
    * Normalizes an Indian Railways search payload into canonical NormalizedTransportOption.
+   * Handles all API schemas from RailAPI, IRCTC RapidAPI, NTES, etc.
    */
   public static normalizeTrainOption(
     raw: any,
     sourceType: 'REAL' | 'MOCK' = 'REAL',
     sourceProvider: string = 'Indian Railways Live RailAPI'
   ): NormalizedTransportOption {
-    const delayMinutes = parseInt(raw.delay_minutes || raw.delayMinutes || '0', 10) || 0;
+    const trainNum = raw.train_number || raw.train_no || raw.trainNumber || raw.train_num || '';
+    const trainName = raw.train_name || raw.trainName || raw.title || 'Express';
+    const serviceNumber = `${trainNum} ${trainName}`.trim();
+
+    const fromStation = raw.from_station_name || raw.from_station || raw.from_std_name || raw.fromStation || raw.origin || raw.from || 'Origin Station';
+    const toStation = raw.to_station_name || raw.to_station || raw.to_sta_name || raw.toStation || raw.destination || raw.to || 'Destination Station';
+
+    const depTime = raw.departure_time || raw.from_std || raw.src_departure_time || raw.scheduledDeparture || raw.departureTime || '10:00 AM';
+    const arrTime = raw.arrival_time || raw.to_sta || raw.dest_arrival_time || raw.scheduledArrival || raw.arrivalTime || '1:30 PM';
+    const expDepTime = raw.expected_departure || depTime;
+    const expArrTime = raw.expected_arrival || arrTime;
+
+    const delayMinutes = parseInt(raw.delay_minutes || raw.delayMinutes || raw.late_minutes || '0', 10) || 0;
     let status: TransportOperationalStatus = 'ON_TIME';
     if (raw.is_cancelled || raw.cancelled) {
       status = 'CANCELLED';
@@ -71,24 +84,26 @@ export class Normalizer {
       status = 'DELAYED';
     }
 
+    const duration = raw.duration || raw.travel_time || raw.duration_hours || undefined;
+
     const fare = typeof raw.fare === 'number' ? raw.fare : parseInt(raw.price || raw.ticket_price || '240', 10) || 240;
     const availableSeats = typeof raw.available_seats === 'number' ? raw.available_seats : typeof raw.availableSeats === 'number' ? raw.availableSeats : null;
     const availabilityStatus: AvailabilityStatus = availableSeats !== null ? (availableSeats > 0 ? 'AVAILABLE' : 'UNAVAILABLE') : 'UNKNOWN';
 
     return {
-      id: raw.id || `train-${raw.train_number || raw.serviceNumber || Math.random().toString(36).substring(7)}`,
+      id: raw.id || `train-${trainNum || Math.random().toString(36).substring(7)}`,
       type: 'TRAIN',
       provider: raw.provider || 'Indian Railways',
-      serviceNumber: `${raw.train_number || ''} ${raw.train_name || raw.serviceNumber || 'Express'}`.trim(),
-      title: raw.train_name || raw.title || 'Superfast Express',
-      origin: raw.from_station_name || raw.origin || raw.from || 'Origin Station',
-      destination: raw.to_station_name || raw.destination || raw.to || 'Destination Station',
-      travelDate: raw.date || raw.travelDate,
-      scheduledDeparture: raw.departure_time || raw.scheduledDeparture || '10:00 AM',
-      scheduledArrival: raw.arrival_time || raw.scheduledArrival || '1:30 PM',
-      expectedDeparture: raw.expected_departure || raw.departure_time || '10:00 AM',
-      expectedArrival: raw.expected_arrival || raw.arrival_time || '1:30 PM',
-      duration: raw.duration || raw.travel_time,
+      serviceNumber,
+      title: trainName,
+      origin: fromStation,
+      destination: toStation,
+      travelDate: raw.date || raw.travelDate || raw.dateOfJourney,
+      scheduledDeparture: depTime,
+      scheduledArrival: arrTime,
+      expectedDeparture: expDepTime,
+      expectedArrival: expArrTime,
+      duration,
       status,
       delayMinutes,
       fareRupees: fare,
@@ -96,11 +111,11 @@ export class Normalizer {
       availabilityStatus,
       terminalDistanceMinsFromStation: 0,
       platformOrTerminal: raw.platform ? `Platform ${raw.platform}` : 'Platform 1',
-      seatOrClass: raw.class || raw.seatOrClass || 'AC Chair Car (CC)',
+      seatOrClass: raw.class || raw.seatOrClass || raw.classes?.[0] || '2S / SL / CC / 3A',
       sourceType,
       sourceProvider,
       lastUpdated: new Date().toISOString(),
-      notes: raw.notes || `Daily scheduled train service via ${raw.from_station_name || 'Station'}`
+      notes: raw.notes || `Daily/Weekly Express Route: ${fromStation} -> ${toStation}`
     };
   }
 
@@ -239,7 +254,7 @@ export class Normalizer {
       status: option.status === 'CANCELLED' ? 'CANCELLED' : option.delayMinutes > 0 ? 'DELAYED' : 'ON_TIME',
       delayMinutes: option.delayMinutes,
       fareRupees: option.fareRupees,
-      availableSeats: option.availableSeats !== null ? option.availableSeats : 1, // At least 1 if unknown or available
+      availableSeats: option.availableSeats !== null ? option.availableSeats : 1,
       terminalDistanceMinsFromStation: option.terminalDistanceMinsFromStation,
       platformOrTerminal: option.platformOrTerminal,
       seatOrClass: option.seatOrClass,
