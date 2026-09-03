@@ -1811,30 +1811,107 @@ export class SyntheticTravelDataset {
   }
 
   public getDestinationById(id: string): SyntheticCity | undefined {
-    return this.cities.find(c => c.id === id || c.name.toLowerCase() === id.toLowerCase());
+    if (!id) return undefined;
+    const clean = id.toLowerCase().replace(/[,()/-]/g, ' ').trim();
+    const tokens = clean.split(/\s+/).filter(t => t.length > 1);
+    return this.cities.find(c => {
+      const cName = c.name.toLowerCase();
+      return c.id === id || cName === clean || cName.includes(clean) || tokens.some(t => cName.includes(t));
+    });
   }
 
-  public getHotelsByCity(cityId: string, category?: string): SyntheticHotel[] {
-    const q = cityId.toLowerCase().trim();
-    let res = this.hotels.filter(h => h.cityId === cityId || h.cityName.toLowerCase() === q || h.cityName.toLowerCase().includes(q) || h.area.toLowerCase().includes(q));
-    if (category) {
-      res = res.filter(h => h.category.toLowerCase() === category.toLowerCase());
+  public getHotelsByCity(query?: string, category?: string): SyntheticHotel[] {
+    let res = this.hotels;
+
+    if (query && query.trim()) {
+      const cleanQ = query.toLowerCase().replace(/[,()/-]/g, ' ').trim();
+      const tokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+
+      res = res.filter(h => {
+        const hCity = h.cityName.toLowerCase();
+        const hName = h.hotelName.toLowerCase();
+        const hArea = h.area.toLowerCase();
+        const hAddress = h.address.toLowerCase();
+        const hTags = h.tags.map(t => t.toLowerCase());
+
+        if (h.cityId.toLowerCase() === cleanQ || hCity.includes(cleanQ) || cleanQ.includes(hCity)) {
+          return true;
+        }
+
+        return tokens.some(token => 
+          hCity.includes(token) ||
+          hName.includes(token) ||
+          hArea.includes(token) ||
+          hAddress.includes(token) ||
+          hTags.some(tag => tag.includes(token))
+        );
+      });
     }
+
+    if (category && category.trim()) {
+      res = res.filter(h => h.category.toLowerCase() === category.toLowerCase().trim());
+    }
+
+    // If query was given but yielded 0 results, provide top recommended popular properties
+    if (res.length === 0 && this.hotels.length > 0) {
+      res = this.hotels.slice(0, 10);
+    }
+
     return res.sort((a, b) => b.popularityScore - a.popularityScore);
   }
 
-  public getActivitiesByCity(cityId: string, category?: string): SyntheticActivity[] {
-    const q = cityId.toLowerCase().trim();
-    let res = this.activities.filter(a => a.cityId === cityId || a.cityName.toLowerCase() === q || a.cityName.toLowerCase().includes(q));
-    if (category) {
-      res = res.filter(a => a.category.toLowerCase() === category.toLowerCase());
+  public getActivitiesByCity(query?: string, category?: string): SyntheticActivity[] {
+    let res = this.activities;
+
+    if (query && query.trim()) {
+      const cleanQ = query.toLowerCase().replace(/[,()/-]/g, ' ').trim();
+      const tokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+
+      res = res.filter(a => {
+        const aCity = a.cityName.toLowerCase();
+        const aName = a.activityName.toLowerCase();
+        const aDesc = (a.description || '').toLowerCase();
+        const aTags = a.tags.map(t => t.toLowerCase());
+
+        if (a.cityId.toLowerCase() === cleanQ || aCity.includes(cleanQ) || cleanQ.includes(aCity)) {
+          return true;
+        }
+
+        return tokens.some(token =>
+          aCity.includes(token) ||
+          aName.includes(token) ||
+          aDesc.includes(token) ||
+          a.category.toLowerCase().includes(token) ||
+          aTags.some(tag => tag.includes(token))
+        );
+      });
     }
+
+    if (category && category.trim()) {
+      res = res.filter(a => a.category.toLowerCase() === category.toLowerCase().trim());
+    }
+
+    // If query yielded 0 results, provide top popular experiences
+    if (res.length === 0 && this.activities.length > 0) {
+      res = this.activities.slice(0, 10);
+    }
+
     return res.sort((a, b) => b.popularityScore - a.popularityScore);
   }
 
   public getPopularJourneys(cityId?: string): PopularJourney[] {
     if (!cityId) return this.popularJourneys;
-    const q = cityId.toLowerCase().trim();
-    return this.popularJourneys.filter(p => p.originCityId === cityId || p.destCityId === cityId || p.originCityName.toLowerCase().includes(q) || p.destCityName.toLowerCase().includes(q));
+    const cleanQ = cityId.toLowerCase().replace(/[,()/-]/g, ' ').trim();
+    const tokens = cleanQ.split(/\s+/).filter(t => t.length > 1);
+
+    const matches = this.popularJourneys.filter(p => {
+      const o = p.originCityName.toLowerCase();
+      const d = p.destCityName.toLowerCase();
+      return p.originCityId === cityId || p.destCityId === cityId ||
+        o.includes(cleanQ) || d.includes(cleanQ) ||
+        tokens.some(t => o.includes(t) || d.includes(t));
+    });
+
+    return matches.length > 0 ? matches : this.popularJourneys;
   }
 }

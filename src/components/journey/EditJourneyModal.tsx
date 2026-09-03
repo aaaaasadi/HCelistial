@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Edit3,
@@ -89,6 +89,33 @@ export const EditJourneyModal: React.FC = () => {
   const [activityLocation, setActivityLocation] = useState('');
   const [activityStartTime, setActivityStartTime] = useState('09:00 AM');
 
+  const popularQuickDestinations = ['Goa', 'Mumbai', 'Pune', 'Jaipur', 'Udaipur', 'Manali', 'Rishikesh', 'Munnar', 'Delhi', 'Bengaluru'];
+
+  // Auto-load hotels & activities when entering tabs
+  useEffect(() => {
+    if (!isEditJourneyModalOpen || !isAddingNew) return;
+
+    if (segmentType === 'HOTEL') {
+      const city = hotelSearchCity.trim() || tripDestination || 'Goa';
+      setIsSearchingHotels(true);
+      destinationApi.searchHotels(city, hotelSearchCategory || undefined)
+        .then(res => {
+          setHotelSearchResults(res.data || []);
+          setHasSearchedHotels(true);
+        })
+        .finally(() => setIsSearchingHotels(false));
+    } else if (segmentType === 'ACTIVITY') {
+      const city = activitySearchCity.trim() || tripDestination || 'Goa';
+      setIsSearchingActivities(true);
+      destinationApi.searchActivities(city, activitySearchCategory || undefined)
+        .then(res => {
+          setActivitySearchResults(res.data || []);
+          setHasSearchedActivities(true);
+        })
+        .finally(() => setIsSearchingActivities(false));
+    }
+  }, [segmentType, isAddingNew, isEditJourneyModalOpen, hotelSearchCategory, activitySearchCategory]);
+
   if (!isEditJourneyModalOpen) return null;
 
   const handleSearchTransport = async (e?: React.FormEvent) => {
@@ -164,12 +191,12 @@ export const EditJourneyModal: React.FC = () => {
     setSearchQuery('');
   };
 
-  const handleSearchHotels = async (e?: React.FormEvent) => {
+  const handleSearchHotels = async (e?: React.FormEvent, customCity?: string) => {
     if (e) e.preventDefault();
     setIsSearchingHotels(true);
     setHasSearchedHotels(true);
     try {
-      const city = hotelSearchCity.trim() || tripDestination || 'Goa';
+      const city = (customCity !== undefined ? customCity : hotelSearchCity).trim() || tripDestination || 'Goa';
       const res = await destinationApi.searchHotels(city, hotelSearchCategory || undefined);
       setHotelSearchResults(res.data || []);
     } catch (err) {
@@ -222,12 +249,12 @@ export const EditJourneyModal: React.FC = () => {
     setHotelLocation('');
   };
 
-  const handleSearchActivities = async (e?: React.FormEvent) => {
+  const handleSearchActivities = async (e?: React.FormEvent, customCity?: string) => {
     if (e) e.preventDefault();
     setIsSearchingActivities(true);
     setHasSearchedActivities(true);
     try {
-      const city = activitySearchCity.trim() || tripDestination || 'Goa';
+      const city = (customCity !== undefined ? customCity : activitySearchCity).trim() || tripDestination || 'Goa';
       const res = await destinationApi.searchActivities(city, activitySearchCategory || undefined);
       setActivitySearchResults(res.data || []);
     } catch (err) {
@@ -384,8 +411,8 @@ export const EditJourneyModal: React.FC = () => {
                     setIsAddingNew(true);
                     setSearchOrigin(tripOrigin);
                     setSearchDestination(tripDestination);
-                    setHotelSearchCity(tripDestination);
-                    setActivitySearchCity(tripDestination);
+                    setHotelSearchCity(tripDestination || 'Goa');
+                    setActivitySearchCity(tripDestination || 'Goa');
                     setSearchResults([]);
                     setHotelSearchResults([]);
                     setActivitySearchResults([]);
@@ -649,7 +676,7 @@ export const EditJourneyModal: React.FC = () => {
 
                     {hotelInputMode === 'search' ? (
                       <div className="space-y-3">
-                        <form onSubmit={handleSearchHotels} className="p-3.5 rounded-2xl bg-white border border-amber-200 space-y-3">
+                        <form onSubmit={(e) => handleSearchHotels(e)} className="p-3.5 rounded-2xl bg-white border border-amber-200 space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="text-[10px] font-mono font-bold text-text-secondary uppercase">
@@ -680,6 +707,26 @@ export const EditJourneyModal: React.FC = () => {
                                 <option value="BUDGET">Budget Comfort</option>
                               </select>
                             </div>
+                          </div>
+
+                          {/* Quick Destination Chips */}
+                          <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5">
+                            <span className="text-[10px] font-mono text-text-muted uppercase font-bold flex-shrink-0">
+                              Popular:
+                            </span>
+                            {popularQuickDestinations.map(city => (
+                              <button
+                                key={city}
+                                type="button"
+                                onClick={() => {
+                                  setHotelSearchCity(city);
+                                  handleSearchHotels(undefined, city);
+                                }}
+                                className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition-colors flex-shrink-0"
+                              >
+                                {city}
+                              </button>
+                            ))}
                           </div>
 
                           <div className="flex justify-end pt-1">
@@ -846,7 +893,7 @@ export const EditJourneyModal: React.FC = () => {
 
                     {activityInputMode === 'search' ? (
                       <div className="space-y-3">
-                        <form onSubmit={handleSearchActivities} className="p-3.5 rounded-2xl bg-white border border-amber-200 space-y-3">
+                        <form onSubmit={(e) => handleSearchActivities(e)} className="p-3.5 rounded-2xl bg-white border border-amber-200 space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="text-[10px] font-mono font-bold text-text-secondary uppercase">
@@ -878,6 +925,26 @@ export const EditJourneyModal: React.FC = () => {
                                 <option value="SIGHTSEEING">City Sightseeing</option>
                               </select>
                             </div>
+                          </div>
+
+                          {/* Quick Destination Chips */}
+                          <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5">
+                            <span className="text-[10px] font-mono text-text-muted uppercase font-bold flex-shrink-0">
+                              Popular:
+                            </span>
+                            {popularQuickDestinations.map(city => (
+                              <button
+                                key={city}
+                                type="button"
+                                onClick={() => {
+                                  setActivitySearchCity(city);
+                                  handleSearchActivities(undefined, city);
+                                }}
+                                className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition-colors flex-shrink-0"
+                              >
+                                {city}
+                              </button>
+                            ))}
                           </div>
 
                           <div className="flex justify-end pt-1">
