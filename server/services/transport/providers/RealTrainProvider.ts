@@ -56,7 +56,6 @@ function resolveStationCode(stationInput: string): string {
   for (const [key, code] of Object.entries(STATION_CODE_MAP)) {
     if (clean.includes(key)) return code;
   }
-  // If already a clean uppercase station code
   if (/^[A-Za-z]{2,5}$/.test(stationInput.trim())) {
     return stationInput.trim().toUpperCase();
   }
@@ -66,14 +65,16 @@ function resolveStationCode(stationInput: string): string {
 export class RealTrainProvider implements ITrainProvider {
   private apiKey: string | undefined;
   private apiUrl: string;
+  private isAopay: boolean;
 
   constructor(options?: { apiKey?: string; apiUrl?: string }) {
     this.apiKey = options?.apiKey || process.env.TRAIN_API_KEY;
-    this.apiUrl = options?.apiUrl || process.env.TRAIN_API_URL || 'https://railway-live-enquiry.p.rapidapi.com';
+    this.apiUrl = options?.apiUrl || process.env.TRAIN_API_URL || 'https://api.aopay.in/v2';
+    this.isAopay = this.apiUrl.toLowerCase().includes('aopay');
   }
 
   public getProviderName(): string {
-    return 'Indian Railways Live RailAPI';
+    return this.isAopay ? 'AOPAY Indian Railways API' : 'Indian Railways Live RailAPI';
   }
 
   public isReal(): boolean {
@@ -84,7 +85,7 @@ export class RealTrainProvider implements ITrainProvider {
     if (!this.apiKey || this.apiKey.trim() === '') {
       console.warn(`[RealTrainProvider] TRAIN_API_KEY is not configured on the server.`);
       throw new Error(
-        `[RealTrainProvider] Configuration Error: TRAIN_API_KEY is not configured in .env. To search live trains using the REAL provider, set a valid TRAIN_API_KEY in .env, or switch TRAIN_PROVIDER=mock in .env.`
+        `[RealTrainProvider] Configuration Error: TRAIN_API_KEY is not configured in .env. To search live trains using the REAL provider (${this.getProviderName()}), set a valid TRAIN_API_KEY in .env, or switch TRAIN_PROVIDER=mock in .env.`
       );
     }
 
@@ -94,9 +95,9 @@ export class RealTrainProvider implements ITrainProvider {
     const travelDate = query.date || new Date().toISOString().split('T')[0];
     const trainFilter = (query.query || query.serviceNumber || '').trim().toLowerCase();
 
-    console.log(`[RealTrainProvider] 🔍 REAL API Query Initiated:`);
-    console.log(`  - Origin: ${query.origin} (Code: ${fromCode})`);
-    console.log(`  - Destination: ${query.destination} (Code: ${toCode})`);
+    console.log(`[RealTrainProvider] 🔍 ${this.getProviderName()} Query Initiated:`);
+    console.log(`  - Origin: ${query.origin} (Station Code: ${fromCode})`);
+    console.log(`  - Destination: ${query.destination} (Station Code: ${toCode})`);
     console.log(`  - Travel Date: ${travelDate}`);
     console.log(`  - Filter: ${trainFilter || 'ALL TRAINS'}`);
     console.log(`  - Provider URL: ${this.apiUrl}`);
@@ -105,16 +106,27 @@ export class RealTrainProvider implements ITrainProvider {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 9000);
 
-      // Support primary standard RapidAPI endpoints
-      const url = `${this.apiUrl}/trains/betweenStations?from=${encodeURIComponent(fromCode)}&to=${encodeURIComponent(toCode)}&date=${encodeURIComponent(travelDate)}`;
+      let url: string;
+      const headers: Record<string, string> = {
+        'Accept': 'application/json'
+      };
+
+      if (this.isAopay) {
+        // AOPAY v2 train search specification
+        const baseUrl = this.apiUrl.endsWith('/') ? this.apiUrl.slice(0, -1) : this.apiUrl;
+        url = `${baseUrl}/trains/search?from=${encodeURIComponent(fromCode)}&to=${encodeURIComponent(toCode)}&date=${encodeURIComponent(travelDate)}`;
+        headers['Authorization'] = `Bearer ${this.apiKey}`;
+        headers['Content-Type'] = 'application/json';
+      } else {
+        // RapidAPI Rail enquiry specification
+        url = `${this.apiUrl}/trains/betweenStations?from=${encodeURIComponent(fromCode)}&to=${encodeURIComponent(toCode)}&date=${encodeURIComponent(travelDate)}`;
+        headers['X-RapidAPI-Key'] = this.apiKey;
+        headers['X-RapidAPI-Host'] = new URL(this.apiUrl).host;
+      }
 
       const res = await fetch(url, {
         method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': this.apiKey,
-          'X-RapidAPI-Host': new URL(this.apiUrl).host,
-          'Accept': 'application/json'
-        },
+        headers,
         signal: controller.signal
       });
       clearTimeout(timeoutId);
@@ -123,7 +135,7 @@ export class RealTrainProvider implements ITrainProvider {
       console.log(`[RealTrainProvider] HTTP Status: ${res.status} in ${durationMs}ms`);
 
       if (res.status === 401 || res.status === 403) {
-        throw new Error(`[RealTrainProvider] Authentication failed (HTTP ${res.status}). Please verify your TRAIN_API_KEY in .env.`);
+        throw new Error(`[RealTrainProvider] Authentication failed (HTTP ${res.status}). Please verify your TRAIN_API_KEY in .env for ${this.getProviderName()}.`);
       }
       if (res.status === 429) {
         throw new Error(`[RealTrainProvider] Rate limit exceeded on train API (HTTP 429).`);
@@ -151,8 +163,8 @@ export class RealTrainProvider implements ITrainProvider {
         Normalizer.normalizeTrainOption(
           {
             ...item,
-            from_station_name: item.from_station_name || item.from_station || query.origin,
-            to_station_name: item.to_station_name || item.to_station || query.destination,
+            from_station_name: item.from_station_name || item.from_station || item.fromStation || query.origin,
+            to_station_name: item.to_station_name || item.to_station || item.toStation || query.destination,
             date: travelDate
           },
           'REAL',
@@ -191,17 +203,27 @@ export class RealTrainProvider implements ITrainProvider {
 
       const cleanNumber = trainNumber.match(/\d+/)?.[0] || trainNumber.trim();
       const travelDate = date || new Date().toISOString().split('T')[0];
-      const url = `${this.apiUrl}/trains/${encodeURIComponent(cleanNumber)}/live-status?date=${encodeURIComponent(travelDate)}`;
+
+      let url: string;
+      const headers: Record<string, string> = {
+        'Accept': 'application/json'
+      };
+
+      if (this.isAopay) {
+        const baseUrl = this.apiUrl.endsWith('/') ? this.apiUrl.slice(0, -1) : this.apiUrl;
+        url = `${baseUrl}/trains/track/${encodeURIComponent(cleanNumber)}?date=${encodeURIComponent(travelDate)}`;
+        headers['Authorization'] = `Bearer ${this.apiKey}`;
+      } else {
+        url = `${this.apiUrl}/trains/${encodeURIComponent(cleanNumber)}/live-status?date=${encodeURIComponent(travelDate)}`;
+        headers['X-RapidAPI-Key'] = this.apiKey;
+        headers['X-RapidAPI-Host'] = new URL(this.apiUrl).host;
+      }
       
       console.log(`[RealTrainProvider] Fetching live telemetry for train ${cleanNumber} on ${travelDate}`);
 
       const res = await fetch(url, {
         method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': this.apiKey,
-          'X-RapidAPI-Host': new URL(this.apiUrl).host,
-          'Accept': 'application/json'
-        },
+        headers,
         signal: controller.signal
       });
       clearTimeout(timeoutId);
